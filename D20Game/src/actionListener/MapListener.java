@@ -14,7 +14,7 @@ public class MapListener implements ActionListener{
 //	int[][] newMap;
 	Cells[][] newMap;
 	
-	int x,y;
+	int x,y,numRows,numCols;
 	public MapListener(Map map) {
 		this.map = map;
 		
@@ -29,17 +29,20 @@ public class MapListener implements ActionListener{
 					 x = (int) jButton.getClientProperty("Rows");
 					 y = (int) jButton.getClientProperty("Cols");
 					newMap = map.getMap();
+					numRows = newMap[0][0].getX();
+					numCols = newMap[0][0].getY();
 					newMap[x][y].setTileType(TileType.Ground);
-					map.setMap(newMap);
+					map.setMap(newMap,numRows,numCols);
 					map.drawMap(2);
-					System.out.println(jButton.getClientProperty("Rows")+" "+jButton.getClientProperty("Cols"));
 					}
 			else if(e.getKeyCode()==KeyEvent.VK_1){
 				 x = (int) jButton.getClientProperty("Rows");
 				 y = (int) jButton.getClientProperty("Cols");
 				newMap = map.getMap();
+				numRows = newMap[0][0].getX();
+				numCols = newMap[0][0].getY();
 				newMap[x][y].setTileType(TileType.WALL);
-				map.setMap(newMap);
+				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
 				}
 			else if(e.getKeyCode()==KeyEvent.VK_2)
@@ -47,8 +50,10 @@ public class MapListener implements ActionListener{
 				 x = (int) jButton.getClientProperty("Rows");
 				 y = (int) jButton.getClientProperty("Cols");
 				newMap = map.getMap();
+				numRows = newMap[0][0].getX();
+				numCols = newMap[0][0].getY();
 				newMap[x][y].setTileType(TileType.CHEST);
-				map.setMap(newMap);
+				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_3)
@@ -56,8 +61,10 @@ public class MapListener implements ActionListener{
 				 x = (int) jButton.getClientProperty("Rows");
 				 y = (int) jButton.getClientProperty("Cols");
 				newMap = map.getMap();
+				numRows = newMap[0][0].getX();
+				numCols = newMap[0][0].getY();
 				newMap[x][y].setTileType(TileType.HERO);
-				map.setMap(newMap);
+				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
 			}
 			else if(e.getKeyCode()==KeyEvent.VK_4)
@@ -65,8 +72,21 @@ public class MapListener implements ActionListener{
 				 x = (int) jButton.getClientProperty("Rows");
 				 y = (int) jButton.getClientProperty("Cols");
 				newMap = map.getMap();
+				numRows = newMap[0][0].getX();
+				numCols = newMap[0][0].getY();
 				newMap[x][y].setTileType(TileType.MONSTER);
-				map.setMap(newMap);
+				map.setMap(newMap,numRows,numCols);
+				map.drawMap(2);
+			}
+			else if(e.getKeyCode()==KeyEvent.VK_5)
+			{
+				 x = (int) jButton.getClientProperty("Rows");
+				 y = (int) jButton.getClientProperty("Cols");
+				newMap = map.getMap();
+				numRows = newMap[0][0].getX();
+				numCols = newMap[0][0].getY();
+				newMap[x][y].setTileType(TileType.EXIT);
+				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
 			}
 			}
