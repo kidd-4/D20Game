@@ -10,8 +10,8 @@ import map.Map;
 public class LoadMap {
 	Cells[][] cells;
 	
-	public Cells[][] loadMap(Map map, int count) throws IOException{
-		String filePath = "/Users/grey/Desktop/Test/Map/Map"+count+".txt";//different maps
+	public Cells[][] loadMap(Map map, String string3) throws IOException{
+		String filePath = "/Users/grey/Desktop/Test/Map/"+string3+".txt";//different maps
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
 		
 		String string = null;

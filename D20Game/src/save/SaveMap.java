@@ -10,8 +10,8 @@ public class SaveMap {
 	
 	
 	
-	public void saveMap(Cells[][] cells, int rows,int cols,int count) throws IOException{
-		String filePath = "/Users/grey/Desktop/Test/Map/Map"+count+".txt"; //save different maps
+	public void saveMap(Cells[][] cells, int rows,int cols,String mapName) throws IOException{
+		String filePath = "/Users/grey/Desktop/Test/Map/"+mapName+".txt"; //save different maps
 		BufferedWriter bufferedWriter  = new BufferedWriter(new FileWriter(filePath));
 		
 		bufferedWriter.write(rows + " "+ cols);
