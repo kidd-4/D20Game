@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import actionListener.MapListener;
 import characters.Cells;
@@ -68,8 +69,6 @@ public class Map {
 	public JMenuItem saveMap = new JMenuItem("Save Map");
 	public JMenu jMenuLoad = new JMenu("Load");
 	public JMenuItem loadMap = new JMenuItem("Load Map");
-	public JMenuItem loadCharacter = new JMenuItem("Load Character");
-	public JMenuItem loadItem = new JMenuItem("Load Item");
 	public JMenuItem jMenuMap = new JMenuItem("Create a map");
 	public JMenuItem jMenuCharacter = new JMenuItem("Create a character");
 	public JMenuItem jMenuItem = new JMenuItem("Create an item");
@@ -281,8 +280,33 @@ public class Map {
 		saveMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int flagEntry = 0;
+				int flagExit = 0;
+				int flagHero = 0;
+				
+				for(int i=0;i<numRows;i++){
+					for(int j=0;j<numCols;j++){
+						if(map[i][j].getTileType().equals(TileType.ENTRY))
+							flagEntry = 1;
+						 if (map[i][j].getTileType().equals(TileType.EXIT))
+							flagExit = 1;	
+						 if (map[i][j].getTileType().equals(TileType.HERO))
+							flagHero = 1;
+						
+					}
+					
+				}
+				if(flagEntry==0)
+				JOptionPane.showMessageDialog(null, "There is no Entry", "Alert", JOptionPane.ERROR_MESSAGE);
+				if(flagExit==0)
+					JOptionPane.showMessageDialog(null, "There is no Exit", "Alert", JOptionPane.ERROR_MESSAGE);
+				if(flagHero==0)
+					JOptionPane.showMessageDialog(null, "There is no Player", "Alert", JOptionPane.ERROR_MESSAGE);
+				
+				if(flagEntry==1 && flagExit==1 && flagHero==1){
 				new SaveMapFrame(map,numRows,numCols,jFrame);
-				jFrame.setEnabled(false);				
+				jFrame.setEnabled(false);
+				}
 				
 				
 			}
@@ -319,8 +343,6 @@ public class Map {
 		jMenu.add(jMenuItem);
 		jMenuSave.add(saveMap);
 		jMenuLoad.add(loadMap);
-		jMenuLoad.add(loadCharacter);
-		jMenuLoad.add(loadItem);
 		jMenuBar.add(jMenu);
 		jMenuBar.add(jMenuSave);
 		jMenuBar.add(jMenuLoad);
