@@ -15,6 +15,9 @@ public class Characters {
 
 	public int strength;
 	public int dexterity;//敏捷
+
+
+	public int defence;
 //	public int constitution;
 	public int wisdom;
 //	public int intelligence;
@@ -46,28 +49,20 @@ public class Characters {
 	public Characters() {
 	}
 
-	public Characters(String name,int level,int hitpoints,int strength,int dexterity,int wisdom,
+	public Characters(String name,int level,int hitpoints,int movement,int strength,int defence,int dexterity,int wisdom,
 			Orientation orient,ArrayList<Items> arrayList) {
 
 		this.name = name;
 		this.level = level;
 		this.hitpoints = hitpoints;
+		this.movement = movement;
 		this.strength = strength;
+		this.defence = defence;
 		this.dexterity = dexterity;
 		this.wisdom = wisdom;
 		this.orient = orient;
 		this.arrayList = arrayList;
 		
-//		level = 1;
-//		hitpoints = -1;
-//		movement = fourD6() / 6;
-//
-//		strength = fourD6();
-//		dexterity = fourD6();
-//		constitution = fourD6();
-//		wisdom = fourD6();
-//		intelligence = fourD6();
-//		charisma = fourD6();
 
 		modStr = strength / 3;
 		modDex = dexterity / 3;
@@ -79,18 +74,15 @@ public class Characters {
 //		inventory = new Items[10];
 //		backpack = new Items[1000];
 
-//		for (int i = 0; i < 10; i++) {
-//			inventory[i] = new Items();
-//		}
-//
-//		weapon = new Items();
-//		shield = new Items();
-//		helmet = new Items();
-//		armor = new Items();
-//		ring = new Items();
-//		belt = new Items();
-//		boots = new Items();
 
+	}
+
+	public int getMovement() {
+		return movement;
+	}
+
+	public void setMovement(int movement) {
+		this.movement = movement;
 	}
 
 	public Orientation getOrient() {
@@ -131,6 +123,14 @@ public class Characters {
 
 	public void setStrength(int strength) {
 		this.strength = strength;
+	}
+	
+	public int getDefence() {
+		return defence;
+	}
+
+	public void setDefence(int defence) {
+		this.defence = defence;
 	}
 
 	public int getDexterity() {
