@@ -20,7 +20,7 @@ public class LoadCharacter {
 	Items belt;
 	Items boot;
 	Characters characters;
-	//在创建地图时，需要加入创建好的人物，这个时候需要将下拉框的名字和文件中的名字对应，回返对应的人物对象。读取人物时也需要
+	//在创建地图时，需要加入创建好的人物，这个时候需要将下拉框的名字和文件中的名字对应，回返对应的人物对象。(MapListener)
 	public Characters loadcharacter(String string) throws IOException{
 		String filePath = "/Users/grey/Desktop/Test/Characters.txt";
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -29,13 +29,13 @@ public class LoadCharacter {
 		while((string2 = bufferedReader.readLine())!= null){
 			String[] strings = string2.split(" ");
 			if(string.equals(strings[0])){
-				weapon = new Items(strings[7], Integer.parseInt(strings[8]));
-				shield = new Items(strings[9], Integer.parseInt(strings[10]));
-				helmet = new Items(strings[11], Integer.parseInt(strings[12]));
-				armor = new Items(strings[13], Integer.parseInt(strings[14]));
-				ring = new Items(strings[15], Integer.parseInt(strings[16]));
-				belt = new Items(strings[17], Integer.parseInt(strings[18]));
-				boot = new Items(strings[19], Integer.parseInt(strings[20]));
+				weapon = new Items(strings[9], Integer.parseInt(strings[10]));
+				shield = new Items(strings[11], Integer.parseInt(strings[12]));
+				helmet = new Items(strings[13], Integer.parseInt(strings[14]));
+				armor = new Items(strings[15], Integer.parseInt(strings[16]));
+				ring = new Items(strings[17], Integer.parseInt(strings[18]));
+				belt = new Items(strings[19], Integer.parseInt(strings[20]));
+				boot = new Items(strings[21], Integer.parseInt(strings[22]));
 				arrayList2.add(weapon);
 				arrayList2.add(shield);
 				arrayList2.add(helmet);
@@ -46,7 +46,7 @@ public class LoadCharacter {
 				
 				characters = new Characters(strings[0], Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), 
 						Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), Integer.parseInt(strings[5]),
-						Enum.valueOf(Orientation.class, strings[6]), arrayList2);
+						Integer.parseInt(strings[6]),Integer.parseInt(strings[7]), Enum.valueOf(Orientation.class, strings[8]), arrayList2);
 			}
 			
 		}
@@ -65,13 +65,13 @@ public class LoadCharacter {
 		while((string = bufferedReader.readLine())!= null){
 			String[] strings = string.split(" ");
 			
-			weapon = new Items(strings[7], Integer.parseInt(strings[8]));
-			shield = new Items(strings[9], Integer.parseInt(strings[10]));
-			helmet = new Items(strings[11], Integer.parseInt(strings[12]));
-			armor = new Items(strings[13], Integer.parseInt(strings[14]));
-			ring = new Items(strings[15], Integer.parseInt(strings[16]));
-			belt = new Items(strings[17], Integer.parseInt(strings[18]));
-			boot = new Items(strings[19], Integer.parseInt(strings[20]));
+			weapon = new Items(strings[9], Integer.parseInt(strings[10]));
+			shield = new Items(strings[11], Integer.parseInt(strings[12]));
+			helmet = new Items(strings[13], Integer.parseInt(strings[14]));
+			armor = new Items(strings[15], Integer.parseInt(strings[16]));
+			ring = new Items(strings[17], Integer.parseInt(strings[18]));
+			belt = new Items(strings[19], Integer.parseInt(strings[20]));
+			boot = new Items(strings[21], Integer.parseInt(strings[22]));
 			arrayList2.add(weapon);
 			arrayList2.add(shield);
 			arrayList2.add(helmet);
@@ -82,7 +82,7 @@ public class LoadCharacter {
 			
 			characters = new Characters(strings[0], Integer.parseInt(strings[1]), Integer.parseInt(strings[2]), 
 					Integer.parseInt(strings[3]), Integer.parseInt(strings[4]), Integer.parseInt(strings[5]),
-					Enum.valueOf(Orientation.class, strings[6]), arrayList2);
+					Integer.parseInt(strings[6]),Integer.parseInt(strings[7]),Enum.valueOf(Orientation.class, strings[8]), arrayList2);
 			
 			arrayList.add(characters);
 		}
