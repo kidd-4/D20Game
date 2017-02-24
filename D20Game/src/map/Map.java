@@ -1,15 +1,17 @@
 package map;
 
 import java.awt.BorderLayout;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -17,7 +19,12 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import actionListener.MapListener;
 import characters.Cells;
+import characters.Characters;
+import characters.Ground;
+import characters.Items;
 import enumclass.TileType;
+import load.LoadCharacter;
+import load.LoadItem;
 
 /**
  * 
@@ -34,11 +41,11 @@ public class Map {
 
 	private int numRows = 0;
 	private int numCols = 1;
-	JButton[][] jButtons = new JButton[100][100];
-	Cells[][] map;
-	Cells[][] loadMapCells;
-	Player player;
-	private String mapName;
+	public JButton[][] jButtons = new JButton[100][100];
+	public Cells[][] map;
+	public Object object;
+	public ArrayList<Items> itemArrayList = new ArrayList<Items>();
+	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
 	
 	
 	
@@ -46,18 +53,19 @@ public class Map {
 	public int width, height;
 	public String title;
 	public JFrame jFrame;
-	public Canvas canvas;
 	public JButton jButton;
 	public JPanel panel = new JPanel();
-	public JPanel panel2 = new JPanel();
+//	public JPanel panelShow = new JPanel();
 	public JPanel panel3 = new JPanel();
+	public JPanel showPanel = new JPanel();
+	public JPanel characterPanel = new JPanel();
+	public JComboBox<String> itemBox = new JComboBox<String>();
+	public JComboBox<String> characterBox = new JComboBox<String>();
 	public JMenuBar jMenuBar = new JMenuBar();
 	public JMenu jMenu = new JMenu("Menu");
 	public JMenu jMenuHelp = new JMenu("Help");
 	public JMenu jMenuSave = new JMenu("Save");
 	public JMenuItem saveMap = new JMenuItem("Save Map");
-//	public JMenuItem saveCharacter = new JMenuItem("Save Character");
-//	public JMenuItem saveItem = new JMenuItem("Save Item");
 	public JMenu jMenuLoad = new JMenu("Load");
 	public JMenuItem loadMap = new JMenuItem("Load Map");
 	public JMenuItem loadCharacter = new JMenuItem("Load Character");
@@ -68,21 +76,8 @@ public class Map {
 	public JMenuItem jMenuCampaign = new JMenuItem("Create a compaign");
 	public JMenuItem jMenuInstruction = new JMenuItem("Instruction");
 	
-	public Cells[][] getLoadMapCells() {
-		return loadMapCells;
-	}
+	
 
-	public void setLoadMapCells(Cells[][] loadMapCells) {
-		this.loadMapCells = loadMapCells;
-	}
-
-	public String getMapName() {
-		return mapName;
-	}
-
-	public void setMapName(String mapName) {
-		this.mapName = mapName;
-	}
 
 	public Cells[][] getMap() {
 		return map;
@@ -101,7 +96,14 @@ public class Map {
 	public int getNumCols() {
 		return numCols;
 	}
+	
+	public void setNumRows(int numRows) {
+		this.numRows = numRows;
+	}
 
+	public void setNumCols(int numCols) {
+		this.numCols = numCols;
+	}
 
 
 	public Map(String title, int width, int height) {
@@ -111,13 +113,7 @@ public class Map {
 		init();
 	}
 
-	public void setNumRows(int numRows) {
-		this.numRows = numRows;
-	}
-
-	public void setNumCols(int numCols) {
-		this.numCols = numCols;
-	}
+	
 
 	/**
 	 * This method is used to draw the map in a panel according to different
@@ -127,10 +123,16 @@ public class Map {
 	public void drawMap(int k) {
 
 		panel.setBounds(0, 0, numCols * 33,numRows * 33);// rows represents height, cols represents width
-		// System.out.println(numRows*32+"--"+numCols*32);
 		panel.setLayout(new GridLayout(numRows, numCols));
-		panel2.setBounds(width * 4 / 5, 0, width / 5, height);
+//		panelShow.setBounds(width * 4 / 5, 0, width / 5, height);
 		panel3.setBounds(0, 0, width * 4 / 5, height);
+		showPanel.setBounds(width * 4 / 5, 0, width / 5, height/3);
+		characterPanel.setBounds(width * 4 / 5, height/3,width / 5, height*2/3);
+		
+		
+		drawItemBox();
+		drawcharacterBox();
+		
 //		 System.out.println("numRows: "+numRows);
 //		 System.out.println("numCols: "+numCols);
 		
@@ -140,8 +142,8 @@ public class Map {
 		if (k == 1) {
 			map = new Cells[numRows][numCols];
 			for (int rows = 0; rows < numRows; rows++)
-				for (int cols = 0; cols < numCols; cols++) {
-						map[rows][cols] = new Cells(TileType.Ground,numRows,numCols);
+			for (int cols = 0; cols < numCols; cols++) {
+			map[rows][cols] = new Cells(TileType.GROUND,numRows,numCols,new Ground(TileType.GROUND));
 					
 				}
 		}
@@ -157,7 +159,7 @@ public class Map {
 			for (int j = 0; j < numCols; j++) {
 
 				// panel.setLayout(new GridLayout(numRows,numCols));
-				if (map[i][j].getTileType() == TileType.Ground)
+				if (map[i][j].getTileType() == TileType.GROUND)
 					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Ground.png")));
 				else if (map[i][j].getTileType() == TileType.WALL) 
 					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Wall.png")));
@@ -169,12 +171,14 @@ public class Map {
 					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Monster.png")));
 				else if (map[i][j].getTileType() == TileType.EXIT)
 					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Exit.png")));
+				else if (map[i][j].getTileType() == TileType.ENTRY)
+					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Entry.png")));
 				
 				jButton.putClientProperty("Rows", i);
 				jButton.putClientProperty("Cols", j);
 				jButton.setBorderPainted(false);
 				jButton.setBounds(j * 33, i * 33, 32, 32); // j represents width, i represent height
-				jButton.addActionListener(new MapListener(Map.this));
+				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox));
 
 				jButtons[i][j] = jButton;
 				panel.add(jButtons[i][j]);
@@ -184,32 +188,49 @@ public class Map {
 				
 			}
 
-	
-		
-//		player = new Player(Map.this, panel);
-//		player.update();
 	}
 
+	private void drawcharacterBox() {
+		characterBox.removeAllItems();
+		
+		try {
+			characterArrayList = new LoadCharacter().readCharacter();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		for(Characters characters:characterArrayList)
+		{
+			characterBox.addItem(characters.getName());
+		}
+		
+	}
+
+	public void drawItemBox(){
+			itemBox.removeAllItems();
+			
+		
+		 try {
+				itemArrayList = new LoadItem().readItem();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			for(Items items : itemArrayList)
+			{
+				itemBox.addItem(items.getName());
+				
+			}
+	}
+	
 	public void init() {
 
 		jFrame = new JFrame(title);
 		jFrame.setBounds(0, 0, width, height);
 
-		// canvas = new Canvas();
-		// canvas.setPreferredSize(new Dimension(width, height));
-		// canvas.setMaximumSize(new Dimension(width, height));
-		// canvas.setMinimumSize(new Dimension(width, height));
-
-		// jFrame.add(canvas);
-		// jFrame.pack();//fully display canvas
-
-		// Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		// int width = screenSize.width;
-		// int height = screenSize.height;
-
 		 drawMap(1);
 		 
-
+		
 		// panel was covered by buttons
 		// panel.addMouseListener(new MouseAdapter() {
 		//
@@ -233,7 +254,8 @@ public class Map {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				panel.removeAll();
-				new RowColFrame(Map.this);
+				new RowColFrame(Map.this,jFrame);
+				jFrame.setEnabled(false);
 
 			}
 		});
@@ -242,7 +264,8 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ItemFrame(Map.this);
+				new ItemFrame(Map.this,jFrame,itemArrayList);
+				jFrame.setEnabled(false);
 			}
 		});
 
@@ -250,18 +273,16 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				new CharacterFrame(Map.this);
+				new CharacterFrame(Map.this,jFrame,characterArrayList);
+				jFrame.setEnabled(false);
 			}
 		});
 		
 		saveMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
-				new SaveMapFrame(map,numRows,numCols);
-				System.out.println();
-				
+				new SaveMapFrame(map,numRows,numCols,jFrame);
+				jFrame.setEnabled(false);				
 				
 				
 			}
@@ -273,8 +294,8 @@ public class Map {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				new LoadMapFrame(Map.this,map);
-				
+				new LoadMapFrame(Map.this,map,jFrame);
+				jFrame.setEnabled(false);
 				
 //				Cells[][] cells;
 //				cells = new LoadMap().loadMap(Map.this,"Map1");
@@ -297,8 +318,6 @@ public class Map {
 		jMenu.add(jMenuCharacter);
 		jMenu.add(jMenuItem);
 		jMenuSave.add(saveMap);
-//		jMenuSave.add(saveCharacter);
-//		jMenuSave.add(saveItem);
 		jMenuLoad.add(loadMap);
 		jMenuLoad.add(loadCharacter);
 		jMenuLoad.add(loadItem);
@@ -309,28 +328,32 @@ public class Map {
 		jFrame.setJMenuBar(jMenuBar);
 
 		panel.setBackground(Color.gray);
-		panel2.setBackground(Color.GREEN);
+//		panelShow.setBackground(Color.GREEN);
+		showPanel.setBackground(Color.BLUE);
+		characterPanel.setBackground(Color.white);
 		
 		panel3.setLayout(new BorderLayout());
 		panel3.add(panel, BorderLayout.CENTER);// add more panels to solve the problem
-												 
+		showPanel.add(itemBox);
+		showPanel.add(characterBox);
+//		panelShow.setLayout(new FlowLayout());
+//		panelShow.add(itemPanel);
+//		panelShow.add(characterPanel);
 
 		jFrame.add(panel);
-		jFrame.add(panel2);
+//		jFrame.add(panelShow);
+		jFrame.add(showPanel);
+		jFrame.add(characterPanel);
 		jFrame.add(panel3);
 
 		jFrame.setPreferredSize(new Dimension(width, height));
-		// jFrame.pack();
+		jFrame.pack();
 		jFrame.setVisible(true);
 		jFrame.setLocationRelativeTo(null);// put the screen in the center
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
 
-	public Canvas getCanvas(){
-		return canvas;
-		
-	}
 	
 
 }
