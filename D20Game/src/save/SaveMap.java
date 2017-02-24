@@ -12,9 +12,10 @@ public class SaveMap {
 	
 	// 在保存地图时调用，将创建好的Cells二位数组保存在mapName文件中
 	public void saveMap(Cells[][] cells, int rows,int cols,String mapName) throws IOException{
-		String filePath = "/Users/grey/Desktop/Test/Map/"+mapName+".txt"; //save different maps
-		BufferedWriter bufferedWriter  = new BufferedWriter(new FileWriter(filePath));
+		String filePath = "/Users/grey/Desktop/Test/Maps.txt"; //save different maps
+		BufferedWriter bufferedWriter  = new BufferedWriter(new FileWriter(filePath,true));
 		
+		bufferedWriter.write(mapName+" ");
 		bufferedWriter.write(rows + " "+ cols);
 		bufferedWriter.newLine();
 	
