@@ -34,10 +34,22 @@ public class CharacterFrame {
 	private JTextField hitpoints = new JTextField();
 	private JTextField movement = new JTextField();
 	private JTextField strength = new JTextField();
-	private JTextField defence = new JTextField();
+	private JTextField constitution = new JTextField();
 	private JTextField dexterity = new JTextField();
 	private JTextField wisdom = new JTextField();
+	private JTextField intelligence = new JTextField();
+	private JTextField charisma = new JTextField();
 	private JTextField orient = new JTextField();
+	
+	private JTextField modStr = new JTextField();
+	private JTextField modDex = new JTextField();
+	private JTextField modCon = new JTextField();
+	private JTextField modWis = new JTextField();
+	private JTextField modInt = new JTextField();
+	private JTextField modCha = new JTextField();
+	private JTextField armorClass = new JTextField();
+	private JTextField attackBonus = new JTextField();
+	private JTextField damageBonus = new JTextField();
 	
 	private JTextField weapon = new JTextField();
 	private JTextField shield = new JTextField();
@@ -60,6 +72,7 @@ public class CharacterFrame {
 		JFrame jFrame = new JFrame("Character");
 		JButton save = new JButton("Save");
 		JButton roll = new JButton("Roll");
+		JButton Modify = new JButton("Modify");
 		JButton loadItem = new JButton("Load an item");
 		JComboBox<String> jComboBox = new JComboBox<String>();
 		JLabel nameLabel = new JLabel("Name");
@@ -67,10 +80,23 @@ public class CharacterFrame {
 		JLabel hitpointsLabel = new JLabel("Hitpoint");
 		JLabel movementLabel = new JLabel("Movement");
 		JLabel strengthLabel = new JLabel("Strength");
-		JLabel defenceLabel = new JLabel("Defence");
+		JLabel constitutionLable = new JLabel("Constitution");
+		JLabel intelligenceLable = new JLabel("Intelligence");
+		JLabel charismaLable = new JLabel("Charisma");
 		JLabel dexterityLabel = new JLabel("Dexterity");
 		JLabel wisdomLabel = new JLabel("Wisdom");
 		JLabel orientLabel = new JLabel("Orient");
+		
+		JLabel modStrLabel = new JLabel("modStr");
+		JLabel modDexLabel = new JLabel("modDex");
+		JLabel modConLabel = new JLabel("modCon");
+		JLabel modWisLabel = new JLabel("modWis");
+		JLabel modIntLabel = new JLabel("modInt");
+		JLabel modChaLabel = new JLabel("modCha");
+		
+		JLabel armorClassLabel = new JLabel("armorClass");
+		JLabel attackBonusLabel = new JLabel("attackBonus");
+		JLabel damageBonusLabel = new JLabel("damageBonus");
 		
 		JLabel weaponLabel = new JLabel("Weapon");
 		JLabel shieldLabel = new JLabel("Shield");
@@ -133,8 +159,8 @@ public class CharacterFrame {
 		strength.setSize(new Dimension(50, 30));
 		strength.setColumns(8);
 		
-		defence.setSize(new Dimension(50, 30));
-		defence.setColumns(8);
+		constitution.setSize(new Dimension(50, 30));
+		constitution.setColumns(8);
 		
 		dexterity.setSize(new Dimension(50, 30));
 		dexterity.setColumns(8);
@@ -142,8 +168,42 @@ public class CharacterFrame {
 		wisdom.setSize(new Dimension(50, 30));
 		wisdom.setColumns(8);
 		
+		intelligence.setSize(new Dimension(50, 30));
+		intelligence.setColumns(8);
+		
+		charisma.setSize(new Dimension(50, 30));
+		charisma.setColumns(8);
+		
 		orient.setSize(new Dimension(50, 30));
-		orient.setColumns(20);
+		orient.setColumns(8);
+		
+		modCha.setSize(new Dimension(50, 30));
+		modCha.setColumns(8);
+		
+		modStr.setSize(new Dimension(50, 30));
+		modStr.setColumns(8);
+
+		modDex.setSize(new Dimension(50, 30));
+		modDex.setColumns(8);
+		
+		modCon.setSize(new Dimension(50, 30));
+		modCon.setColumns(6);
+		
+		modInt.setSize(new Dimension(50, 30));
+		modInt.setColumns(8);
+		
+		modWis.setSize(new Dimension(50, 30));
+		modWis.setColumns(8);
+		
+		armorClass.setSize(new Dimension(50, 30));
+		armorClass.setColumns(8);
+		
+		attackBonus.setSize(new Dimension(50, 30));
+		attackBonus.setColumns(6);
+		
+		damageBonus.setSize(new Dimension(50, 30));
+		damageBonus.setColumns(6);
+		
 		
 		
 		jFrame.setLayout(new FlowLayout());
@@ -157,14 +217,37 @@ public class CharacterFrame {
 		jFrame.add(movement);
 		jFrame.add(strengthLabel);
 		jFrame.add(strength);
-		jFrame.add(defenceLabel);
-		jFrame.add(defence);
+		jFrame.add(modStrLabel);
+		jFrame.add(modStr);
 		jFrame.add(dexterityLabel);
 		jFrame.add(dexterity);
+		jFrame.add(modDexLabel);
+		jFrame.add(modDex);
+		jFrame.add(constitutionLable);
+		jFrame.add(constitution);
+		jFrame.add(modConLabel);
+		jFrame.add(modCon);
 		jFrame.add(wisdomLabel);
 		jFrame.add(wisdom);
+		jFrame.add(modWisLabel);
+		jFrame.add(modWis);
+		jFrame.add(intelligenceLable);
+		jFrame.add(intelligence);
+		jFrame.add(modIntLabel);
+		jFrame.add(modInt);
+		jFrame.add(charismaLable);
+		jFrame.add(charisma);
+		jFrame.add(modChaLabel);
+		jFrame.add(modCha);
 		jFrame.add(orientLabel);
 		jFrame.add(orient);
+		
+		jFrame.add(armorClassLabel);
+		jFrame.add(armorClass);
+		jFrame.add(attackBonusLabel);
+		jFrame.add(attackBonus);
+		jFrame.add(damageBonusLabel);
+		jFrame.add(damageBonus);
 		
 		jFrame.add(weaponLabel);
 		jFrame.add(weaponName);
@@ -191,6 +274,7 @@ public class CharacterFrame {
 		jFrame.add(loadItem);
 		jFrame.add(jComboBox);
 		jFrame.add(roll);
+		jFrame.add(Modify);
 		jFrame.add(save);
 		
 		try {
@@ -206,7 +290,7 @@ public class CharacterFrame {
 		}
 		
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
-		jFrame.setSize(new Dimension(350, 500));
+		jFrame.setSize(new Dimension(350, 800));
 		jFrame.setVisible(true);
 //		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.addWindowListener(new WindowAdapter() {
@@ -217,12 +301,26 @@ public class CharacterFrame {
 		});
 		
 		
+		Modify.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			intelligence.setText(String.valueOf(Integer.parseInt(intelligence.getText())+Integer.parseInt(helmet.getText())));
+			strength.setText(String.valueOf(Integer.parseInt(strength.getText())+Integer.parseInt(belt.getText())));
+			wisdom.setText(String.valueOf(Integer.parseInt(wisdom.getText())+Integer.parseInt(ring.getText())));
+			dexterity.setText(String.valueOf(Integer.parseInt(dexterity.getText())+Integer.parseInt(boot.getText())));
+			hitpoints.setText(String.valueOf(Integer.parseInt(level.getText())*10+Integer.parseInt(constitution.getText())));
+			armorClass.setText(String.valueOf(Integer.parseInt(modDex.getText())+Integer.parseInt(armor.getText())+Integer.parseInt(shield.getText())));
+			attackBonus.setText(String.valueOf(Integer.parseInt(level.getText())+Integer.parseInt(modStr.getText())));
+			damageBonus.setText(String.valueOf(Integer.parseInt(modStr.getText())+Integer.parseInt(weapon.getText())));
+			}
+		});
+		
 		loadItem.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String string = jComboBox.getSelectedItem().toString();
-				int num1,num2;
 				try {
 					String newString = new LoadItem().loadItem(string);
 					String[] strings =newString.split(" ");
@@ -232,64 +330,36 @@ public class CharacterFrame {
 					{
 						weaponName.setText(name);
 						weapon.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(strength.getText());
-						strength.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("S")||name.startsWith("s"))
 					{
 						shieldName.setText(name);
 						shield.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(defence.getText());
-						defence.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("H")||name.startsWith("h"))
 					{
 						helmetName.setText(name);
 						helmet.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(strength.getText());
-						strength.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("A")||name.startsWith("a"))
 					{
 						armorName.setText(name);
 						armor.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(defence.getText());
-						defence.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("R")||name.startsWith("r"))
 					{
 						ringName.setText(name);
 						ring.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(wisdom.getText());
-						wisdom.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("BELT")||name.startsWith("belt"))
 					{
 						beltName.setText(name);
 						belt.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(wisdom.getText());
-						wisdom.setText(String.valueOf(num1+num2));
 					}
 					else if(name.startsWith("BOOT")||name.startsWith("boot"))
 					{
 						bootName.setText(name);
 						boot.setText(value);
-						
-						num1 = Integer.parseInt(value);
-						num2 = Integer.parseInt(dexterity.getText());
-						dexterity.setText(String.valueOf(num1+num2));
 					}
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
@@ -304,6 +374,7 @@ public class CharacterFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 			ArrayList<Items> newItemArrayList = new ArrayList<Items>();
+			ArrayList<Items> backpack = new ArrayList<Items>();
 			newItemArrayList.add(new Items(weaponName.getText(), Integer.parseInt(weapon.getText())));
 			newItemArrayList.add(new Items(shieldName.getText(), Integer.parseInt(shield.getText())));
 			newItemArrayList.add(new Items(helmetName.getText(), Integer.parseInt(helmet.getText())));
@@ -311,10 +382,23 @@ public class CharacterFrame {
 			newItemArrayList.add(new Items(ringName.getText(), Integer.parseInt(ring.getText())));
 			newItemArrayList.add(new Items(beltName.getText(), Integer.parseInt(belt.getText())));
 			newItemArrayList.add(new Items(bootName.getText(), Integer.parseInt(boot.getText())));
+			
+			backpack.add(new Items("WEAPON2", 2));
+			backpack.add(new Items("BOOT2", 2));
+			backpack.add(new Items("BELT2", 2));
+			backpack.add(new Items("RING2", 2));
+			backpack.add(new Items("EMPTY", 0));
+			backpack.add(new Items("EMPTY", 0));
+			backpack.add(new Items("EMPTY", 0));
+			backpack.add(new Items("EMPTY", 0));
+			backpack.add(new Items("EMPTY", 0));
+			backpack.add(new Items("EMPTY", 0));
 			Characters characters = new Characters(name.getText(),Integer.parseInt(level.getText()), Integer.parseInt(hitpoints.getText()),
-					Integer.parseInt(movement.getText()), Integer.parseInt(strength.getText()), Integer.parseInt(defence.getText()),
-					Integer.parseInt(dexterity.getText()), Integer.parseInt(wisdom.getText()),Enum.valueOf(Orientation.class, orient.getText()),
-					newItemArrayList);
+					Integer.parseInt(movement.getText()), Integer.parseInt(strength.getText()),Integer.parseInt(modStr.getText()),
+					Integer.parseInt(dexterity.getText()),Integer.parseInt(modDex.getText()), Integer.parseInt(constitution.getText()),Integer.parseInt(modCon.getText()),
+					Integer.parseInt(wisdom.getText()),Integer.parseInt(modWis.getText()),Integer.parseInt(intelligence.getText()),Integer.parseInt(modInt.getText()),
+					Integer.parseInt(charisma.getText()),Integer.parseInt(modCha.getText()),Enum.valueOf(Orientation.class, orient.getText()),
+					Integer.parseInt(armorClass.getText()),Integer.parseInt(attackBonus.getText()),Integer.parseInt(damageBonus.getText()),newItemArrayList,backpack);
 			
 //			characterArrayList.add(characters);
 			
@@ -326,6 +410,8 @@ public class CharacterFrame {
 			};
 			
 			map.drawcharacterBox();
+			map.drawBackpackBox();
+			map.drawInformation();
 			
 				jFrame2.setEnabled(true);
 				jFrame.dispose();
@@ -347,8 +433,11 @@ public class CharacterFrame {
 				values = getValues();
 				wisdom.setText(String.valueOf(values));
 				values = getValues();
-				defence.setText(String.valueOf(values));
-				
+				constitution.setText(String.valueOf(values));
+				values = getValues();
+				intelligence.setText(String.valueOf(values));
+				values = getValues();
+				charisma.setText(String.valueOf(values));
 			}
 
 			private int getValues() {

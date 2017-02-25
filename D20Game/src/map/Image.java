@@ -1,10 +1,8 @@
 package map;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageInputStream;
 
 public class Image {
 	public static BufferedImage loadImage(String path){
@@ -18,5 +16,7 @@ public class Image {
 		}
 		return null;
 	}
+	
+	
 	
 }

@@ -14,10 +14,8 @@ import map.Map;
 
 public class Launch {
 	public static void main(String[] args)  {
-//		Game game = new Game("D20Game",1280,800);
-//		game.start();
 		
-		new Map("D20Game",850,800);
+		new Map("D20Game",1000,800);
 	}
 
 }

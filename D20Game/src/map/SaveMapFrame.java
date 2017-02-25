@@ -7,12 +7,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-
 import characters.Cells;
 import save.SaveMap;
 
@@ -50,6 +48,7 @@ public class SaveMapFrame {
 				
 //				map.setMapName(mapName.getName());
 //				System.out.println(mapName.getText());
+				
 				try {
 					new SaveMap().saveMap(map,numRows,numCols,mapName.getText());
 				} catch (IOException e1) {

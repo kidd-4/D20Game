@@ -24,13 +24,15 @@ public class LoadMap {
 		String string2 = null;
 		int i=0;
 		while((string2 = bufferedReader.readLine())!=null){
+			//读取文件第一行，判断是否有对应的地图名称
 			String[] strings2 = string2.split(" ");
 			if(strings2[0].equals(string3))
-			{
+			{	//如果有，则读取整个地图
 				int rows = Integer.parseInt(strings2[1]);
 				int cols = Integer.parseInt(strings2[2]);
 				cells = new Cells[rows][cols];
 				while((string = bufferedReader.readLine())!=null){
+					//读取整个地图，直到下一个地图
 					String[] strings = string.split(" ");
 					if(strings[0].startsWith("M")||strings[0].startsWith("m"))
 						break;
