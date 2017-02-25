@@ -21,6 +21,12 @@ import enumclass.TileType;
 import load.LoadCharacter;
 import load.LoadItem;
 
+/**
+ * Maplistener class implements actionlisener, 
+ * when button on the map was clicked, then we call this class
+ * @author grey
+ * @version 1.0
+ */
 public class MapListener implements ActionListener{
 	public Map map;
 	Cells[][] newMap;
@@ -32,17 +38,28 @@ public class MapListener implements ActionListener{
 	Characters characters;
 	
 	int x,y,numRows,numCols;
+	/**
+	 * map listener constructor method
+	 * @param map 	the map object from the main frame
+	 * @param itemBox	the item box object from the main frame
+	 * @param characterBox	the character box object from the main frame
+	 */
 	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox) {
 		this.map = map;
 		this.itemBox = itemBox;
 		this.characterBox = characterBox;
 	}
+	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton jButton = (JButton) e.getSource();
 //		System.out.println(itemBox.getSelectedItem().toString());
 //		System.out.println(characterBox.getSelectedItem().toString());
 		try {
+			 //读取items
+			 /* when the item box in the main frame was selected, 
+			  * then we get corresponding item String from the file
+			 */ 
 			 item = new LoadItem().loadItem(itemBox.getSelectedItem().toString());
 			 strings = item.split(" ");
 			 items = new Items(strings[0], Integer.parseInt(strings[1]));
@@ -52,6 +69,10 @@ public class MapListener implements ActionListener{
 		}
 		
 		try {
+			//读取characters
+			/* when the character box in the main frame was selected, 
+			 * then we get corresponding character object from the file
+			 */
 			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString());
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -60,13 +81,15 @@ public class MapListener implements ActionListener{
 		
 		
 		jButton.addKeyListener(new KeyAdapter() {
-			 
+			 /* when we press the number on the keyboard, 
+			  * then change the corresponding button to new Cells object, and repaint the map
+			  */
 			public void keyPressed(KeyEvent e){
 				if(e.getKeyCode()==KeyEvent.VK_0){
 					 x = (int) jButton.getClientProperty("Rows");
 					 y = (int) jButton.getClientProperty("Cols");
 					newMap = map.getMap();
-					numRows = newMap[0][0].getX();
+					numRows = newMap[0][0].getX();// the total rows of map
 					numCols = newMap[0][0].getY();
 //					newMap[x][y].setTileType(TileType.Ground);
 					newMap[x][y] = new Cells(TileType.GROUND, numRows, numCols, new Ground(TileType.GROUND));
