@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -36,6 +37,7 @@ public class MapListener implements ActionListener{
 	String[] strings;
 	Items items;
 	Characters characters;
+	ArrayList<Characters> characterArrayList;
 	
 	int x,y,numRows,numCols;
 	/**
@@ -43,11 +45,13 @@ public class MapListener implements ActionListener{
 	 * @param map 	the map object from the main frame
 	 * @param itemBox	the item box object from the main frame
 	 * @param characterBox	the character box object from the main frame
+	 * @param characterArrayList 
 	 */
-	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox) {
+	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox, ArrayList<Characters> characterArrayList) {
 		this.map = map;
 		this.itemBox = itemBox;
 		this.characterBox = characterBox;
+		this.characterArrayList = characterArrayList;
 	}
 	
 	@Override
@@ -73,7 +77,7 @@ public class MapListener implements ActionListener{
 			/* when the character box in the main frame was selected, 
 			 * then we get corresponding character object from the file
 			 */
-			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString());
+			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

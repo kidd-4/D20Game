@@ -7,20 +7,22 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import characters.Cells;
+import characters.Matrix;
 import load.LoadMap;
 
 public class LoadMapFrame {
 	
-	Cells[][] mapCells;
 	int numRows;
 	int numCols;
 			
-	public LoadMapFrame(Map map, Cells[][] map2, JFrame jFrame2){
+	public LoadMapFrame(Map map, JFrame jFrame2, ArrayList<Matrix> allMaps){
 		JFrame jFrame = new JFrame("Load the map");
 		JButton jButton = new JButton("Load");
 		JLabel jLabelName = new JLabel("Input a map name");
@@ -52,13 +54,20 @@ public class LoadMapFrame {
 				
 
 				try {
-					Cells[][] cells;
-					cells = new LoadMap().loadMap(map,mapName.getText());
+					Cells[][] cells = null;
+					cells = new LoadMap().loadMap(allMaps,mapName.getText());
+					
 //					System.out.println(mapName.getText());
+
+					if(cells == null)
+						JOptionPane.showMessageDialog(null, "There is no such a map", "Alert", JOptionPane.ERROR_MESSAGE);
+					
+					else{
 					numRows = cells[0][0].getX();
 					numCols = cells[0][0].getY();
 					map.setMap(cells,numRows,numCols);
 					map.drawMap(2);
+					}
 //					System.out.println("-----");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block

@@ -6,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -66,11 +65,6 @@ public class RowColFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-//				String rows = jTextRows.getText();
-//				String columns = jTextColumns.getText();
-				
-//				map.drawMap();
-				
 				
 				map.setNumRows(Integer.parseInt(jTextRows.getText()));
 				map.setNumCols(Integer.parseInt(jTextColumns.getText()));

@@ -9,7 +9,6 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -37,7 +36,7 @@ public class ItemFrame {
 	
 	//WEAPON, SHIELD, HELMET, ARMOR, RING, BELT, BOOTS,EMPTY
 	
-	public ItemFrame(Map map, JFrame jFrame2, ArrayList<Items> itemArrayList, JComboBox<String> itemBox){
+	public ItemFrame(Map map, JFrame jFrame2, ArrayList<Items> itemArrayList){
 		JFrame jFrame = new JFrame("Items");
 		JButton jButton = new JButton("Save");
 		JLabel weaponLabel = new JLabel("Item");

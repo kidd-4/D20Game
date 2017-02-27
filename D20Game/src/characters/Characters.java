@@ -2,10 +2,12 @@ package characters;
 
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import enumclass.Orientation;
 
-public class Characters {
+@SuppressWarnings("serial")
+public class Characters implements Serializable {
 	Orientation orient;//hostile or friendly
 	public String name;
 

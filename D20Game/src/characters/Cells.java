@@ -1,8 +1,11 @@
 package characters;
 
+import java.io.Serializable;
+
 import enumclass.TileType;
 
-public class Cells {
+@SuppressWarnings("serial")
+public class Cells implements Serializable{
 	
 	TileType tileType;
 	int x, y;//the total length of x and y

@@ -3,6 +3,7 @@ package map;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -19,16 +20,17 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import actionListener.MapListener;
 import characters.Cells;
 import characters.Characters;
 import characters.Ground;
 import characters.Items;
+import characters.Matrix;
 import enumclass.TileType;
 import load.LoadCharacter;
 import load.LoadItem;
+import load.LoadMap;
+import save.SaveCharacter;
 
 /**
  * 
@@ -48,11 +50,15 @@ public class Map {
 	public ArrayList<Items> itemArrayList = new ArrayList<Items>();
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
 	public ArrayList<Items> backpack = new ArrayList<Items>();
+	public ArrayList<Matrix> allMaps = new ArrayList<Matrix>();
+	public ArrayList<ArrayList<Matrix>> campaigns = new ArrayList<ArrayList<Matrix>>();
 
 	public int width, height;
 	public String title;
 	public JFrame jFrame;
 	public JButton jButton;
+	public JButton equip = new JButton("Equip item");
+	public JButton showInformation = new JButton("Show Information");
 	public JPanel panel = new JPanel();
 //	public JPanel panelShow = new JPanel();
 	public JPanel panelContainer = new JPanel(); // contain the panel which contains the map
@@ -63,6 +69,8 @@ public class Map {
 	public JLabel itemBoxLabel =  new JLabel("Created Items");
 	public JComboBox<String> characterBox = new JComboBox<String>();// show created character in the file
 	public JLabel characterBoxLabel =  new JLabel("Created Characters");
+	public JComboBox<String> mapBox = new JComboBox<String>();// show created character in the file
+	public JLabel mapBoxLabel =  new JLabel("Created Maps");
 	public JComboBox<String> backpackBox= new JComboBox<String>();// show backpack of Player
 	public JLabel backpackBoxLabel =  new JLabel("Backpack of Player");
 	
@@ -79,22 +87,43 @@ public class Map {
 	public JMenuItem jMenuCampaign = new JMenuItem("Create a compaign");
 	public JMenuItem jMenuInstruction = new JMenuItem("Instruction");
 	
-	public JLabel inventoryName1 = new JLabel("Backpack1");
-	public JLabel inventoryName2 = new JLabel("Backpack2");
-	public JLabel inventoryName3 = new JLabel("Backpack3");
-	public JLabel inventoryName4 = new JLabel("Backpack4");
-	public JLabel inventoryName5 = new JLabel("Backpack5");
-	public JLabel inventoryName6 = new JLabel("Backpack6");
-	public JLabel inventoryName7 = new JLabel("Backpack7");
+	public JLabel name = new JLabel("Name");
+	public JLabel level = new JLabel("Level");
+	public JLabel hitpoints = new JLabel("Hitpoints");
+	public JLabel movement = new JLabel("Movement");
+	public JLabel strength = new JLabel("Strength");
+	public JLabel dexterity = new JLabel("Dexterity");
+	public JLabel consititution = new JLabel("Consititution");
+	public JLabel wisdom = new JLabel("Wisdom");
+	public JLabel intelligence = new JLabel("Intelligence");
+	public JLabel charisma = new JLabel("Charisma");
+	public JLabel orient = new JLabel("Orientation");
+	public JLabel armorClass = new JLabel("armorClass");
+	public JLabel attackBonus = new JLabel("attackBonus");
+	public JLabel damageBonus = new JLabel("damageBonus");
 	
+	public JLabel namevValue = new JLabel(" ");
+	public JLabel levelValue = new JLabel(" ");
+	public JLabel hitpointsValue = new JLabel(" ");
+	public JLabel movementValue = new JLabel(" ");
+	public JLabel strengthValue = new JLabel(" ");
+	public JLabel dexterityValue = new JLabel(" ");
+	public JLabel consititutionValue = new JLabel(" ");
+	public JLabel wisdomValue = new JLabel(" ");
+	public JLabel intelligenceValue = new JLabel(" ");
+	public JLabel charismaValue = new JLabel(" ");
+	public JLabel orientValue = new JLabel(" ");
+	public JLabel armorClassValue = new JLabel(" ");
+	public JLabel attackBonusValue = new JLabel(" ");
+	public JLabel damageBonusValue = new JLabel(" ");
 	
-	public JLabel inventoryValue1 = new JLabel("Backpack1");
-	public JLabel inventoryValue2 = new JLabel("Backpack2");
-	public JLabel inventoryValue3 = new JLabel("Backpack3");
-	public JLabel inventoryValue4 = new JLabel("Backpack4");
-	public JLabel inventoryValue5 = new JLabel("Backpack5");
-	public JLabel inventoryValue6 = new JLabel("Backpack6");
-	public JLabel inventoryValue7 = new JLabel("Backpack7");
+	public JLabel inventory1 = new JLabel("Inventory1");
+	public JLabel inventory2 = new JLabel("Inventory2");
+	public JLabel inventory3 = new JLabel("Inventory3");
+	public JLabel inventory4 = new JLabel("Inventory4");
+	public JLabel inventory5 = new JLabel("Inventory5");
+	public JLabel inventory6 = new JLabel("Inventory6");
+	public JLabel inventory7 = new JLabel("Inventory7");
 	
 	/**
 	 *  get map method
@@ -110,7 +139,7 @@ public class Map {
 	 * @param numRows  the total rows of map
 	 * @param numCols  the total cols of map
 	 */
-	public void setMap(Cells[][] map, int numRows,int numCols) {
+	public void setMap(Cells[][] map, int numRows,int numCols) {//不需要rows
 		this.map = map;
 		this.numRows = numRows;
 		this.numCols = numCols;
@@ -166,20 +195,18 @@ public class Map {
 		panel.setLayout(new GridLayout(numRows, numCols));
 //		panelShow.setBounds(width * 4 / 5, 0, width / 5, height);
 		panelContainer.setBounds(0, 0, 680, height);
-		showPanel.setBounds(680, 0, width-680, height/3);
-		characterPanel.setBounds(680, height/3,width-680, height*2/3);
+		showPanel.setBounds(680, 0, width-680, height/5);
+		characterPanel.setBounds(680, height/5,width-680, height*4/5);
 		
 		
 		drawItemBox(); //show items in the file
 		drawcharacterBox();// show characters in the file
 		drawBackpackBox();
 		drawInformation();
+		drawMapBox();
 		
 //		 System.out.println("numRows: "+numRows);
 //		 System.out.println("numCols: "+numCols);
-		
-		
-		
 
 		if (k == 1) {
 			map = new Cells[numRows][numCols];
@@ -220,7 +247,7 @@ public class Map {
 				jButton.putClientProperty("Cols", j);
 				jButton.setBorderPainted(false);
 				jButton.setBounds(j * 33, i * 33, 32, 32); // j represents width, i represent height
-				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox));
+				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox,characterArrayList));
 
 				jButtons[i][j] = jButton;
 				panel.add(jButtons[i][j]);
@@ -239,62 +266,47 @@ public class Map {
 			/* when the character box in the main frame was selected, 
 			 * then we get corresponding character object from the file
 			 */
-			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString());
+			if(characterBox.getSelectedItem() !=null)//如果下拉框不为空
+			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
-//		information.setText("Name: "+characters.getName()+" "+"Level: "+characters.getLevel()+" "+"\n"+
-//							"Hitpoints: "+characters.getHitpoints()+" "+"Movement: "+characters.getMovement()+" "+"\n"+
-//							"Strength: "+characters.getStrength()+" "+"Dexterity: "+characters.getDexterity()+" "+"\n"+
-//							"Constitution: "+characters.getConstitution()+" "+"Wisdom: "+characters.getWisdom()+" "+"\n"+
-//							"Intelligence: "+characters.getIntelligence()+" "+"Charisma: "+characters.getCharisma()+" "+"\n");
-//		information.setText(characters.getInventory()+" ");
-		for(int i=0;i<7;i++){
-			switch (i) {
-			case 0:
-				inventoryName1.setText(characters.getInventory().get(i).getName());
-				inventoryValue1.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 1:
-				inventoryName2.setText(characters.getInventory().get(i).getName());
-				inventoryValue2.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 2:
-				inventoryName3.setText(characters.getInventory().get(i).getName());
-				inventoryValue3.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 3:
-				inventoryName4.setText(characters.getInventory().get(i).getName());
-				inventoryValue4.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 4:
-				inventoryName5.setText(characters.getInventory().get(i).getName());
-				inventoryValue5.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 5:
-				inventoryName6.setText(characters.getInventory().get(i).getName());
-				inventoryValue6.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			case 6:
-				inventoryName7.setText(characters.getInventory().get(i).getName());
-				inventoryValue7.setText(String.valueOf(characters.getInventory().get(i).getValue()));
-				break;
-			default:
-				break;
-			}
+		//如果人物不为空
+		if(characters!=null){
+			namevValue.setText(characters.getName());
+			levelValue.setText(String.valueOf(characters.getLevel()));
+			hitpointsValue.setText(String.valueOf(characters.getHitpoints()));
+			movementValue.setText(String.valueOf(characters.getMovement()));
+			strengthValue.setText(String.valueOf(characters.getStrength()));
+			dexterityValue.setText(String.valueOf(characters.getDexterity()));
+			consititutionValue.setText(String.valueOf(characters.getConstitution()));
+			wisdomValue.setText(String.valueOf(characters.getWisdom()));
+			intelligenceValue.setText(String.valueOf(characters.getIntelligence()));
+			charismaValue.setText(String.valueOf(characters.getCharisma()));
+			orientValue.setText(String.valueOf(characters.getOrient()));
+			armorClassValue.setText(String.valueOf(characters.getArmorClass()));
+			attackBonusValue.setText(String.valueOf(characters.getAttackBonus()));
+			damageBonusValue.setText(String.valueOf(characters.getDamageBonus()));
+			inventory1.setText(characters.getInventory().get(0).getName());
+			inventory2.setText(characters.getInventory().get(1).getName());
+			inventory3.setText(characters.getInventory().get(2).getName());
+			inventory4.setText(characters.getInventory().get(3).getName());
+			inventory5.setText(characters.getInventory().get(4).getName());
+			inventory6.setText(characters.getInventory().get(5).getName());
+			inventory7.setText(characters.getInventory().get(6).getName());
 			
-			
+		
 		}
 	}
 	
 	
 	public void drawBackpackBox() {
-		backpackBox.removeAllItems(); // remove original character list
+		backpackBox.removeAllItems(); // remove original item list
 		
 		try {
-			backpack = new LoadCharacter().readBackpack(); // get the character list from file
+			backpack = new LoadCharacter().readBackpack(characterArrayList); // get the item list from file
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -305,18 +317,40 @@ public class Map {
 		}
 		
 	}
+	
+	public void drawMapBox(){
+		mapBox.removeAllItems(); // remove original map list
+		try {
+			allMaps = new LoadMap().readMap();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(Matrix matrix: allMaps)
+		{
+			mapBox.addItem(matrix.getName());
+		}
+	}
 	/**
 	 * show characters list in the character box
 	 */
 	//在面板上显示人物列表
 	public void drawcharacterBox() {
 		characterBox.removeAllItems(); // remove original character list
-		
 		try {
-			characterArrayList = new LoadCharacter().readCharacter(); // get the character list from file
+			characterArrayList = new LoadCharacter().readCharacter();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		for(Characters characters:characterArrayList)
 		{
 			characterBox.addItem(characters.getName());
@@ -339,7 +373,6 @@ public class Map {
 			for(Items items : itemArrayList)
 			{
 				itemBox.addItem(items.getName());
-				
 			}
 	}
 	/**
@@ -353,6 +386,156 @@ public class Map {
 
 		 drawMap(1); //initialize map the first
 		 
+		 //显示下拉框选中的人物的信息
+		 showInformation.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				drawInformation();
+			}
+		});
+		 
+		 //把backpack中的装备换到inventory中，并改变人物的属性
+		 equip.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String backpackString = backpackBox.getSelectedItem().toString();
+				String invetoryString = null;
+				String[] strings = backpackString.split("\\d");//正则表达式去除数字
+				
+				int backpackValue = 0;
+				int inventoryValue = 0;
+				Characters oldCharacter = null;
+				try {
+					//读取characters
+					/* when the character box in the main frame was selected, 
+					 * then we get corresponding character object from the file
+					 */
+					//必须是玩家的名字
+					if(characterBox.getSelectedItem().toString().startsWith("P")||characterBox.getSelectedItem().toString().startsWith("p")){
+					oldCharacter = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
+					}
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(oldCharacter != null){
+					
+				
+				// 获得backpack物品的value
+				for(Items backpack: oldCharacter.getBackpack()){
+					if(backpack.getName().equals(backpackString)){
+						backpackValue = backpack.getValue();
+					}
+				}
+				
+				// 在inventory中寻找和backpack中对应的物品，如果有，则返回对应物品，如果无，就返回空
+				for(Items inventory :oldCharacter.getInventory()){
+					
+					String[] strings2 = inventory.getName().split("\\d");
+					if(strings2[0].equalsIgnoreCase(strings[0])){
+						invetoryString = inventory.getName();
+						inventoryValue = inventory.getValue();
+						break;
+					}
+					else{
+						invetoryString = "EMPTY";
+						inventoryValue = 0;
+					}
+				}
+				
+				//将backpack中的物品换成inventory中的物品
+				for(Items backpack:oldCharacter.getBackpack()){
+					//如果有两个相同名字的物品，则会出问题 break可以解决问题
+					if(backpack.getName().equals(backpackString)){
+						backpack.setName(invetoryString);
+						backpack.setValue(inventoryValue);
+						break;
+					}
+				}
+				
+				//将inventory中的物品换成backpack中的物品，并修改对应的属性
+				if(strings[0].equalsIgnoreCase("WEAPON")){
+					oldCharacter.getInventory().get(0).setName(backpackString);
+					oldCharacter.getInventory().get(0).setValue(backpackValue);
+					int value = oldCharacter.getDamageBonus();
+					oldCharacter.setDamageBonus(value+backpackValue-inventoryValue);
+				}
+				else if(strings[0].equalsIgnoreCase("SHIELD")){
+					oldCharacter.getInventory().get(1).setName(backpackString);
+					oldCharacter.getInventory().get(1).setValue(backpackValue);
+					int value = oldCharacter.getArmorClass();
+					oldCharacter.setArmorClass(value+backpackValue-inventoryValue);
+				}
+				else if(strings[0].equalsIgnoreCase("HELMET")){
+					oldCharacter.getInventory().get(2).setName(backpackString);
+					oldCharacter.getInventory().get(2).setValue(backpackValue);
+					int value = oldCharacter.getIntelligence();
+					oldCharacter.setIntelligence(value+backpackValue-inventoryValue);
+				}
+				else if(strings[0].equalsIgnoreCase("ARMOR")){
+					oldCharacter.getInventory().get(3).setName(backpackString);
+					oldCharacter.getInventory().get(3).setValue(backpackValue);
+					int value = oldCharacter.getArmorClass();
+					oldCharacter.setArmorClass(value+backpackValue-inventoryValue);
+				}
+				else if(strings[0].equalsIgnoreCase("RING")){
+					oldCharacter.getInventory().get(4).setName(backpackString);
+					oldCharacter.getInventory().get(4).setValue(backpackValue);
+					int value = oldCharacter.getWisdom();
+					oldCharacter.setWisdom(value+backpackValue-inventoryValue);
+				}
+				else if(strings[0].equalsIgnoreCase("BELT")){
+					oldCharacter.getInventory().get(5).setName(backpackString);
+					oldCharacter.getInventory().get(5).setValue(backpackValue);
+					int value = oldCharacter.getStrength();
+					oldCharacter.setStrength(value+backpackValue-inventoryValue);
+				}
+				else{
+					oldCharacter.getInventory().get(6).setName(backpackString);
+					oldCharacter.getInventory().get(6).setValue(backpackValue);
+					int value = oldCharacter.getDexterity();
+					oldCharacter.setDexterity(value+backpackValue-inventoryValue);
+				}
+				
+				//删除原有的player之后再保存现在的
+				for(Characters characters: characterArrayList){
+					if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
+						characterArrayList.remove(characters);
+						break;
+					}
+				}
+				
+				characterArrayList.add(oldCharacter);
+				
+				//还要保存文件，这里暂时不保存，便于查看效果
+				
+				try {
+					new SaveCharacter().saveCharacter(characterArrayList);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				}
+				
+				drawBackpackBox();
+				drawInformation();
+				
+				
+			}
+		});
+		 
+		 jMenuCampaign.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CampaignFrame(Map.this,jFrame, allMaps,campaigns);
+				jFrame.setEnabled(false);
+			}
+		});
 		 
 		jMenuMap.addActionListener(new ActionListener() {
 
@@ -369,7 +552,7 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new ItemFrame(Map.this,jFrame,itemArrayList,itemBox);//open ItemFrame
+				new ItemFrame(Map.this,jFrame,itemArrayList);//open ItemFrame
 				jFrame.setEnabled(false);
 			}
 		});
@@ -378,7 +561,7 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CharacterFrame(Map.this,jFrame,characterBox);//open CharacterFrame
+				new CharacterFrame(Map.this,jFrame,characterArrayList);//open CharacterFrame
 				jFrame.setEnabled(false);
 			}
 		});
@@ -414,7 +597,7 @@ public class Map {
 				//如果三者都有，则存储地图
 				// if the map has entry, exit and hero, then save the map
 				if(flagEntry==1 && flagExit==1 && flagHero==1){
-				new SaveMapFrame(map,numRows,numCols,jFrame); //open SaveMapFrame
+				new SaveMapFrame(Map.this,map,jFrame,allMaps); //open SaveMapFrame
 				jFrame.setEnabled(false);
 				}
 				
@@ -428,7 +611,7 @@ public class Map {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				new LoadMapFrame(Map.this,map,jFrame); //open LoadMapFrame
+				new LoadMapFrame(Map.this,jFrame,allMaps); //open LoadMapFrame
 				jFrame.setEnabled(false);
 				
 			}
@@ -458,22 +641,48 @@ public class Map {
 		showPanel.add(itemBox);
 		showPanel.add(characterBoxLabel);
 		showPanel.add(characterBox);
+		showPanel.add(mapBoxLabel);
+		showPanel.add(mapBox);
 		showPanel.add(backpackBoxLabel);
 		showPanel.add(backpackBox);
-		characterPanel.add(inventoryName1);
-		characterPanel.add(inventoryValue1);
-		characterPanel.add(inventoryName2);
-		characterPanel.add(inventoryValue2);
-		characterPanel.add(inventoryName3);
-		characterPanel.add(inventoryValue3);
-		characterPanel.add(inventoryName4);
-		characterPanel.add(inventoryValue4);
-		characterPanel.add(inventoryName5);
-		characterPanel.add(inventoryValue5);
-		characterPanel.add(inventoryName6);
-		characterPanel.add(inventoryValue6);
-		characterPanel.add(inventoryName7);
-		characterPanel.add(inventoryValue7);
+		showPanel.add(equip);
+		showPanel.add(showInformation);
+		characterPanel.setLayout(new FlowLayout(0, 30, 30));//0向左对齐，30代表左右间距，30代表上下间距
+		characterPanel.add(name);
+		characterPanel.add(namevValue);
+		characterPanel.add(level);
+		characterPanel.add(levelValue);
+		characterPanel.add(hitpoints);
+		characterPanel.add(hitpointsValue);
+		characterPanel.add(movement);
+		characterPanel.add(movementValue);
+		characterPanel.add(strength);
+		characterPanel.add(strengthValue);
+		characterPanel.add(dexterity);
+		characterPanel.add(dexterityValue);
+		characterPanel.add(consititution);
+		characterPanel.add(consititutionValue);
+		characterPanel.add(wisdom);
+		characterPanel.add(wisdomValue);
+		characterPanel.add(intelligence);
+		characterPanel.add(intelligenceValue);
+		characterPanel.add(charisma);
+		characterPanel.add(charismaValue);
+		characterPanel.add(orient);
+		characterPanel.add(orientValue);
+		characterPanel.add(armorClass);
+		characterPanel.add(armorClassValue);
+		characterPanel.add(attackBonus);
+		characterPanel.add(attackBonusValue);
+		characterPanel.add(damageBonus);
+		characterPanel.add(damageBonusValue);
+		characterPanel.add(inventory1);
+		characterPanel.add(inventory2);
+		characterPanel.add(inventory3);
+		characterPanel.add(inventory4);
+		characterPanel.add(inventory5);
+		characterPanel.add(inventory6);
+		characterPanel.add(inventory7);
 		
 		
 		

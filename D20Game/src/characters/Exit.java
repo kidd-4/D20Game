@@ -1,8 +1,11 @@
 package characters;
 
+import java.io.Serializable;
+
 import enumclass.TileType;
 
-public class Exit {
+@SuppressWarnings("serial")
+public class Exit implements Serializable{
 	boolean pass;
 	TileType tileType;
 	

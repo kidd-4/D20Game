@@ -28,7 +28,6 @@ public class CharacterFrame {
 	public Map map;
 	public ArrayList<Items> itemArrayList = new ArrayList<Items>();//显示创建人物时的物品下拉框
 	
-//	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
 	private JTextField name = new JTextField();
 	private JTextField level = new JTextField();
 	private JTextField hitpoints = new JTextField();
@@ -68,7 +67,7 @@ public class CharacterFrame {
 	private JTextField bootName = new JTextField();
 
 	
-	public CharacterFrame(Map map, JFrame jFrame2, JComboBox<String> characterBox){
+	public CharacterFrame(Map map, JFrame jFrame2, ArrayList<Characters> characterArrayList){
 		JFrame jFrame = new JFrame("Character");
 		JButton save = new JButton("Save");
 		JButton roll = new JButton("Roll");
@@ -400,14 +399,20 @@ public class CharacterFrame {
 					Integer.parseInt(charisma.getText()),Integer.parseInt(modCha.getText()),Enum.valueOf(Orientation.class, orient.getText()),
 					Integer.parseInt(armorClass.getText()),Integer.parseInt(attackBonus.getText()),Integer.parseInt(damageBonus.getText()),newItemArrayList,backpack);
 			
-//			characterArrayList.add(characters);
-			
+			characterArrayList.add(characters);
 			try {
-				new SaveCharacter().saveCharacter(characters);
+				new SaveCharacter().saveCharacter(characterArrayList);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			};
+			}
+			
+//			try {
+//				new SaveCharacter().saveCharacter(characters);
+//			} catch (IOException e1) {
+//				// TODO Auto-generated catch block
+//				e1.printStackTrace();
+//			};
 			
 			map.drawcharacterBox();
 			map.drawBackpackBox();

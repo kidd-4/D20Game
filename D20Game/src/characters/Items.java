@@ -1,8 +1,11 @@
 package characters;
 
+import java.io.Serializable;
+
 import enumclass.ItemType;
 
-public class Items {
+@SuppressWarnings("serial")
+public class Items implements Serializable {
 		ItemType type;
 
 	    public String name;

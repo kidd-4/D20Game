@@ -25,6 +25,7 @@ public class LoadItem {
 		return newString;
 		
 	}
+	
 	//显示主界面的下拉框中的物品列表
 	public ArrayList<Items> readItem() throws IOException{
 		ArrayList<Items> arrayList = new ArrayList<Items>();

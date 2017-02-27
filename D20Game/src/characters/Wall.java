@@ -1,8 +1,11 @@
 package characters;
 
+import java.io.Serializable;
+
 import enumclass.TileType;
 
-public class Wall {
+@SuppressWarnings("serial")
+public class Wall implements Serializable{
 	boolean through;
 	TileType tileType;
 	

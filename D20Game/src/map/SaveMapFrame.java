@@ -7,16 +7,19 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import characters.Cells;
+import characters.Matrix;
 import save.SaveMap;
 
 public class SaveMapFrame {
 	
-	public SaveMapFrame(Cells[][] map, int numRows, int numCols, JFrame jFrame2){
+	public SaveMapFrame(Map map2, Cells[][] map, JFrame jFrame2, ArrayList<Matrix> allMaps){
 		JFrame jFrame = new JFrame("Save the map");
 		JButton jButton = new JButton("Save");
 		JLabel jLabelName = new JLabel("Input a map name");
@@ -45,16 +48,17 @@ public class SaveMapFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-//				map.setMapName(mapName.getName());
-//				System.out.println(mapName.getText());
+				Matrix matrix = new Matrix(map, mapName.getText());
+				allMaps.add(matrix);
 				
 				try {
-					new SaveMap().saveMap(map,numRows,numCols,mapName.getText());
+					new SaveMap().saveMap(allMaps);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				map2.drawMapBox();
 				jFrame2.setEnabled(true);
 				jFrame.dispose();
 				
