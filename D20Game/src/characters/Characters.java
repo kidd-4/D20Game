@@ -5,7 +5,11 @@ package characters;
 import java.io.Serializable;
 import java.util.ArrayList;
 import enumclass.Orientation;
-
+/**
+ * Character class
+ * @author grey
+ *	@version 1.0
+ */
 @SuppressWarnings("serial")
 public class Characters implements Serializable {
 	Orientation orient;//hostile or friendly
@@ -47,9 +51,31 @@ public class Characters implements Serializable {
 	public Items belt; // increase strength
 	public Items boots; // increase dexterity
 	
-	public Characters() {
-	}
-
+/**
+ *  constructor method
+ * @param name	name
+ * @param level level
+ * @param hitpoints hitpoints
+ * @param movement movement
+ * @param strength strength
+ * @param modStr modifier of strength
+ * @param dexterity dexterity
+ * @param modDex modDex
+ * @param constitution constitution
+ * @param modCon modCon
+ * @param wisdom wisdom
+ * @param modWis modWis
+ * @param intelligence intelligence
+ * @param modInt modInt
+ * @param charisma charisma
+ * @param modCha modCha
+ * @param orient orient
+ * @param armorClass armorClass
+ * @param attackBonus attackBonus
+ * @param damageBonus damageBonus
+ * @param inventory inventory
+ * @param backpack backpack
+ */
 	public Characters(String name,int level,int hitpoints,int movement,int strength,int modStr,int dexterity,int modDex,
 			int constitution,int modCon,int wisdom,int modWis,int intelligence,int modInt,int charisma,int modCha,
 			Orientation orient,int armorClass,int attackBonus,int damageBonus,ArrayList<Items> inventory,ArrayList<Items> backpack) {
@@ -79,180 +105,312 @@ public class Characters implements Serializable {
 		this.modWis = modWis;
 
 	}
-
+/**
+ * 
+ * @return constitution
+ */
 	public int getConstitution() {
 		return constitution;
 	}
-
+/**
+ * 
+ * @param constitution constitution
+ */
 	public void setConstitution(int constitution) {
 		this.constitution = constitution;
 	}
-
+/**
+ * 
+ * @return intelligence
+ */
 	public int getIntelligence() {
 		return intelligence;
 	}
-
+/**
+ * 
+ * @param intelligence intelligence
+ */
 	public void setIntelligence(int intelligence) {
 		this.intelligence = intelligence;
 	}
-
+/**
+ * 
+ * @return charisma
+ */
 	public int getCharisma() {
 		return charisma;
 	}
-
+/**
+ * 
+ * @param charisma charisma
+ */
 	public void setCharisma(int charisma) {
 		this.charisma = charisma;
 	}
-
+/**
+ * 
+ * @return armorClass
+ */
 	public int getArmorClass() {
 		return armorClass;
 	}
-
+/**
+ * 
+ * @param armorClass armorClass
+ */
 	public void setArmorClass(int armorClass) {
 		this.armorClass = armorClass;
 	}
-
+/**
+ * 
+ * @return attackBonus
+ */
 	public int getAttackBonus() {
 		return attackBonus;
 	}
-
+/**
+ * 
+ * @param attackBonus attackBonus
+ */
 	public void setAttackBonus(int attackBonus) {
 		this.attackBonus = attackBonus;
 	}
-
+/**
+ * 
+ * @return damageBonus
+ */
 	public int getDamageBonus() {
 		return damageBonus;
 	}
-
+/**
+ * 
+ * @param damageBonus damageBonus
+ */
 	public void setDamageBonus(int damageBonus) {
 		this.damageBonus = damageBonus;
 	}
-
+/**
+ * 
+ * @return modStr
+ */
 	public int getModStr() {
 		return modStr;
 	}
-
+/**
+ * 
+ * @param modStr modStr
+ */
 	public void setModStr(int modStr) {
 		this.modStr = modStr;
 	}
-
+/**
+ * 
+ * @return modDex
+ */
 	public int getModDex() {
 		return modDex;
 	}
-
+/**
+ * 
+ * @param modDex modDex
+ */
 	public void setModDex(int modDex) {
 		this.modDex = modDex;
 	}
-
+/**
+ * 
+ * @return modCon
+ */
 	public int getModCon() {
 		return modCon;
 	}
-
+/**
+ * 
+ * @param modCon modCon
+ */
 	public void setModCon(int modCon) {
 		this.modCon = modCon;
 	}
-
+/**
+ * 
+ * @return modInt
+ */
 	public int getModInt() {
 		return modInt;
 	}
-
+/**
+ * 
+ * @param modInt modInt
+ */
 	public void setModInt(int modInt) {
 		this.modInt = modInt;
 	}
-
+/**
+ * 
+ * @return modWis
+ */
 	public int getModWis() {
 		return modWis;
 	}
-
+/**
+ * 
+ * @param modWis modWis
+ */
 	public void setModWis(int modWis) {
 		this.modWis = modWis;
 	}
-
+/**
+ * 
+ * @return modCha
+ */
 	public int getModCha() {
 		return modCha;
 	}
-
+/**
+ * 
+ * @param modCha modCha
+ */
 	public void setModCha(int modCha) {
 		this.modCha = modCha;
 	}
-
+/**
+ * 
+ * @return movement
+ */
 	public int getMovement() {
 		return movement;
 	}
-
+/**
+ * 
+ * @param movement movement
+ */
 	public void setMovement(int movement) {
 		this.movement = movement;
 	}
-
+/**
+ * 
+ * @return orient
+ */
 	public Orientation getOrient() {
 		return orient;
 	}
-
+/**
+ * 
+ * @param orient orient
+ */
 	public void setOrient(Orientation orient) {
 		this.orient = orient;
 	}
-
+/**
+ * 
+ * @return name
+ */
 	public String getName() {
 		return name;
 	}
-
+/**
+ * 
+ * @param name name
+ */
 	public void setName(String name) {
 		this.name = name;
 	}
-
+/**
+ * 
+ * @return level
+ */
 	public int getLevel() {
 		return level;
 	}
-
+/**
+ * 
+ * @param level level
+ */
 	public void setLevel(int level) {
 		this.level = level;
 	}
-
+/**
+ * 
+ * @return hitpoints
+ */
 	public int getHitpoints() {
 		return hitpoints;
 	}
-
+/**
+ * 
+ * @param hitpoints hitpoints
+ */
 	public void setHitpoints(int hitpoints) {
 		this.hitpoints = hitpoints;
 	}
-
+/**
+ * 
+ * @return strength
+ */
 	public int getStrength() {
 		return strength;
 	}
-
+/**
+ * 
+ * @param strength strength
+ */
 	public void setStrength(int strength) {
 		this.strength = strength;
 	}
-	
+	/**
+	 * 
+	 * @return dexterity
+	 */
 
 	public int getDexterity() {
 		return dexterity;
 	}
-
+/**
+ * 
+ * @param dexterity dexterity
+ */
 	public void setDexterity(int dexterity) {
 		this.dexterity = dexterity;
 	}
-
+/**
+ * 
+ * @return wisdom
+ */
 	public int getWisdom() {
 		return wisdom;
 	}
-	
+	/**
+	 * 
+	 * @param wisdom wisdom
+	 */
 	public void setWisdom(int wisdom) {
 		this.wisdom = wisdom;
 	}
-
+/**
+ * 
+ * @return inventory
+ */
 	public ArrayList<Items> getInventory() {
 		return inventory;
 	}
-
+/**
+ * 
+ * @param inventory inventory
+ */
 	public void setInventory(ArrayList<Items> inventory) {
 		this.inventory = inventory;
 	}
-
+/**
+ * 
+ * @return backpack
+ */
 	public ArrayList<Items> getBackpack() {
 		return backpack;
 	}
-
+/**
+ * 
+ * @param backpack backpack
+ */
 	public void setBackpack(ArrayList<Items> backpack) {
 		this.backpack = backpack;
 	}

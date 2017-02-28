@@ -46,8 +46,8 @@ public class MapListener implements ActionListener{
 	 * @param map 	the map object from the main frame
 	 * @param itemBox	the item box object from the main frame
 	 * @param characterBox	the character box object from the main frame
-	 * @param characterArrayList 
-	 * @param itemArrayList 
+	 * @param characterArrayList the arraylist which contains all characters
+	 * @param itemArrayList the arraylist which contains all items
 	 */
 	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox, ArrayList<Characters> characterArrayList, ArrayList<Items> itemArrayList) {
 		this.map = map;
@@ -60,15 +60,16 @@ public class MapListener implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton jButton = (JButton) e.getSource();
-//读取items
-		 /* when the item box in the main frame was selected, 
-		  * then we get corresponding item String from the file
+		 /* 
+		  * when the item box in the main frame was selected, 
+		  * then we get corresponding item from the file
 		 */ 
 		 items = new LoadItem().loadItem(itemBox.getSelectedItem().toString(),itemArrayList);
 		
 		try {
 			//读取characters
-			/* when the character box in the main frame was selected, 
+			/* 
+			 * when the character box in the main frame was selected, 
 			 * then we get corresponding character object from the file
 			 */
 			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
@@ -79,7 +80,8 @@ public class MapListener implements ActionListener{
 		
 		
 		jButton.addKeyListener(new KeyAdapter() {
-			 /* when we press the number on the keyboard, 
+			 /* 
+			  * when we press the number on the keyboard, 
 			  * then change the corresponding button to new Cells object, and repaint the map
 			  */
 			public void keyPressed(KeyEvent e){

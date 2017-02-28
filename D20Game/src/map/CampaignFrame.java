@@ -20,13 +20,23 @@ import characters.Matrix;
 import load.LoadCampaign;
 import load.LoadMap;
 import save.SaveCampaign;
-
+/**
+ * CampaignFrame is used to create a new campaign or edit a campaign
+ * @author grey
+ *@version 1.0
+ */
 public class CampaignFrame {
 	public JTextField campaignName = new JTextField();
 	public ArrayList<Matrix> showMaps = new ArrayList<>();
 	public ArrayList<Matrix> campaign = new ArrayList<>();
 	public Campaigns editCampaigns = null;
-	
+	/**
+	 * constructor method, when the CampaignFrame is called,  it will invoke 
+	 * @param map
+	 * @param jFrame2
+	 * @param allMaps
+	 * @param campaignArraylist
+	 */
 	public CampaignFrame(Map map, JFrame jFrame2,ArrayList<Matrix> allMaps, ArrayList<Campaigns> campaignArraylist){
 		JFrame jFrame = new JFrame("Items");
 		JButton save = new JButton("Save");
@@ -74,6 +84,7 @@ public class CampaignFrame {
 		});
 		
 		//将对应名字的campaign中的maps显示在JComBox中
+		// display the name of maps in specific campaigns
 		loadCampaign.addActionListener(new ActionListener() {
 			
 			@Override
@@ -92,6 +103,7 @@ public class CampaignFrame {
 		});
 		
 		//将显示出来的maps中，不需要的去除
+		//remove the map that is selected
 		remove.addActionListener(new ActionListener() {
 			
 			@Override
@@ -104,43 +116,17 @@ public class CampaignFrame {
 					}
 				}
 				//去除相应地图之后，在界面显示出来
+				// display the map in the campaign again
 				ownMaps.removeAllItems();
 				for(Matrix matrix: editCampaigns.getCampaign()){
 					ownMaps.addItem(matrix.getName());
 				}
 			}
 		});
-		
-		//将修改好的campaign保存（先去除原有的campaign，再加入现有的campaign
-//		edit.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				
-//				Campaigns oldCampaign = new LoadCampaign().loadCampaign(campaignArraylist, campaignName.getText());
-//				campaignArraylist.remove(oldCampaign);
-//				campaignArraylist.add(editCampaigns);
-//				
-//				try {
-//					new SaveCampaign().saveCampaign(campaignArraylist);
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
-//				
-//				//在主界面显示campaigns  drawCampaigns();
-//				map.drawCampaignBox();
-//				
-//				jFrame2.setEnabled(true);
-//				jFrame.dispose();
-//			}
-//		});
-		
-		
-		
-		
+	
 		
 		//将选中的map存入campaign中
+		//load a selected map to the campaign
 		loadMap.addActionListener(new ActionListener() {
 			
 			@Override
@@ -154,12 +140,19 @@ public class CampaignFrame {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				editCampaigns.getCampaign().add(matrix);
+				//如果输入的campaign名字已存在(edit)，则添加map。否则新建campaign(create)，加入map
+				if(editCampaigns!=null)
+				editCampaigns.getCampaign().add(matrix);//这里editCampaign 在开始时为空
+				else{
+					campaign.add(matrix);
+					
+				}
 				
 			}
 		});
 		
 		//将campaign存入到campaigns中，再将campaigns保存到campaignArraylist
+		//add the campaign to campaignArraylist and save campaignArraylist 
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -167,13 +160,15 @@ public class CampaignFrame {
 				
 				Campaigns oldCampaign = new LoadCampaign().loadCampaign(campaignArraylist, campaignName.getText());
 				//如果原来没有这个名字的campaign，则加入新的campaign。如果原来有，删除原来的，添加现在的
-				if(oldCampaign == null)
+				//if oldCampaign exit,delete original campaign and add new campaign. if not, just add new campaign
+				if(oldCampaign == null)//create
 				{
 //				Campaigns campaigns = new Campaigns(campaign, campaignName.getText());
-				editCampaigns.setName(campaignName.getText());
+				editCampaigns = new Campaigns(campaign, campaignName.getText());
+//				editCampaigns.setName(campaignName.getText());
 				campaignArraylist.add(editCampaigns);
 				}
-				else{
+				else{//edit
 					campaignArraylist.remove(oldCampaign);
 					campaignArraylist.add(editCampaigns);
 				}
@@ -186,6 +181,7 @@ public class CampaignFrame {
 				}
 				
 				//在主界面显示campaigns  drawCampaigns();
+				// display the campaigns in the main frame
 				map.drawCampaignBox();
 				
 				jFrame2.setEnabled(true);

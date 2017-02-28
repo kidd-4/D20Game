@@ -7,7 +7,11 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import characters.Characters;
 import characters.Items;
-
+/**
+ * LoadCharacter class contains method which return the variable in the character
+ * @author grey
+ *@version 1.0
+ */
 public class LoadCharacter {
 	ArrayList<Items> inventory = new ArrayList<Items>();
 	ArrayList<Items> backpack = new ArrayList<Items>();
@@ -30,7 +34,13 @@ public class LoadCharacter {
 	Items backpack9;
 	Items backpack10;
 
-	
+	/**
+	 * when we create the map, we need to add specific character with the name on the JComBox by using this method
+	 * @param string  name
+	 * @param characterArrayList  ArrayList<Characters>
+	 * @return Characters object
+	 * @throws IOException  IOException
+	 */
 	//在创建地图时，需要加入创建好的人物，这个时候需要将下拉框的名字和文件中的名字对应，返回对应的人物对象。(MapListener)
 	public Characters loadcharacter(String string, ArrayList<Characters> characterArrayList) throws IOException{
 //		String filePath = "/Users/grey/Desktop/Test/Characters.txt";
@@ -98,6 +108,12 @@ public class LoadCharacter {
 		return characters;
 	}
 	
+	/**
+	 * read all characters which are created
+	 * @return ArrayList<Characters> 
+	 * @throws IOException  IOException
+	 * @throws ClassNotFoundException ClassNotFoundException
+	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Characters> readCharacter() throws IOException, ClassNotFoundException{
 		
@@ -172,9 +188,22 @@ public class LoadCharacter {
 //		return arrayList;
 //		
 //	}
-	
+	/**
+	 * display all the items in the backpack of Player
+	 * @param characterArrayList
+	 * @return ArrayList<Items>
+	 * @throws IOException
+	 */
 	//显示主界面的backpack items
 	public ArrayList<Items> readBackpack(ArrayList<Characters> characterArrayList) throws IOException{
+		
+		for(Characters characters: characterArrayList){
+			if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
+				backpack = characters.getBackpack();
+				break;
+			}
+		}
+		return backpack;
 		
 //		String filePath = "/Users/grey/Desktop/Test/Characters.txt";
 //		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
@@ -210,13 +239,7 @@ public class LoadCharacter {
 //		}
 //		
 //		bufferedReader.close();
-		for(Characters characters: characterArrayList){
-			if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
-				backpack = characters.getBackpack();
-				break;
-			}
-		}
-		return backpack;
+		
 		
 	}
 

@@ -23,7 +23,11 @@ import enumclass.Orientation;
 import load.LoadCharacter;
 import load.LoadItem;
 import save.SaveCharacter;
-
+/**
+ * CharacterFrame is used to create a new character or edit a character
+ * @author grey
+ *@version 1.0
+ */
 
 public class CharacterFrame {
 
@@ -69,7 +73,13 @@ public class CharacterFrame {
 	private JTextField beltName = new JTextField();
 	private JTextField bootName = new JTextField();
 
-	
+	/**
+	 * constructor method
+	 * @param map        the Map object
+	 * @param jFrame2    the main frame
+	 * @param characterArrayList
+	 * @param itemArrayList
+	 */
 	public CharacterFrame(Map map, JFrame jFrame2, ArrayList<Characters> characterArrayList, ArrayList<Items> itemArrayList){
 		JFrame jFrame = new JFrame("Character");
 		JButton save = new JButton("Save");
@@ -287,12 +297,10 @@ public class CharacterFrame {
 //				// TODO Auto-generated catch block
 //				e3.printStackTrace();
 //			}
-		
+		// display all the items which are created
 		for(Items items : itemArrayList)
-		{
 			jComboBox.addItem(items.getName());
 			
-		}
 		
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
 		jFrame.setSize(new Dimension(350, 800));
@@ -304,7 +312,7 @@ public class CharacterFrame {
 				jFrame2.setEnabled(true);
 			}
 		});
-		
+		// load an existed character 
 		load.addActionListener(new ActionListener() {
 			
 			@Override
@@ -364,7 +372,7 @@ public class CharacterFrame {
 			}
 		});
 		
-		
+		// change the attribute of character because of some items and modifiers
 		Modify.addActionListener(new ActionListener() {
 			
 			@Override
@@ -380,6 +388,7 @@ public class CharacterFrame {
 			}
 		});
 		
+		//choose the items from the file to equip character
 		loadItem.addActionListener(new ActionListener() {
 			
 			@Override
@@ -429,6 +438,7 @@ public class CharacterFrame {
 			}
 		});
 		
+		// save the character
 		save.addActionListener(new ActionListener() {
 			
 			@Override
@@ -502,6 +512,7 @@ public class CharacterFrame {
 			}
 		});
 		
+		// set the attribute of Player
 		roll.addActionListener(new ActionListener() {
 
 			@Override
