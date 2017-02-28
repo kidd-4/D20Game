@@ -141,12 +141,12 @@ public class CampaignFrame {
 					e1.printStackTrace();
 				}
 				//如果输入的campaign名字已存在(edit)，则添加map。否则新建campaign(create)，加入map
+				//if the name you input has already exited, then add map. if not, create a new campaign, add the map
 				if(editCampaigns!=null)
-				editCampaigns.getCampaign().add(matrix);//这里editCampaign 在开始时为空
-				else{
+					editCampaigns.getCampaign().add(matrix);//这里editCampaign 在开始时为空
+				else
 					campaign.add(matrix);
 					
-				}
 				
 			}
 		});

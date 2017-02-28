@@ -16,7 +16,11 @@ import javax.swing.JTextField;
 import characters.Items;
 import load.LoadItem;
 import save.SaveItem;
-
+/**
+ * ItemFrame is used to create a new Item or edit a Item
+ * @author grey
+ * @version 1.0
+ */
 public class ItemFrame {
 
 	public Map map;
@@ -38,7 +42,12 @@ public class ItemFrame {
 	// private JTextField bootName = new JTextField();
 
 	// WEAPON, SHIELD, HELMET, ARMOR, RING, BELT, BOOTS,EMPTY
-
+/**
+ * constructor method
+ * @param map 		Map object
+ * @param jFrame2   main frame
+ * @param itemArrayList  itemArrayList
+ */
 	public ItemFrame(Map map, JFrame jFrame2, ArrayList<Items> itemArrayList) {
 		JFrame jFrame = new JFrame("Items");
 		JButton save = new JButton("Save");
@@ -120,7 +129,8 @@ public class ItemFrame {
 				jFrame2.setEnabled(true);
 			}
 		});
-
+		
+		//load a item value with the input name
 		load.addActionListener(new ActionListener() {
 
 			@Override
@@ -132,7 +142,8 @@ public class ItemFrame {
 					itemValue.setText(String.valueOf(oldItems.getValue()));
 			}
 		});
-
+		
+		// save a item
 		save.addActionListener(new ActionListener() {
 
 			@Override
@@ -154,6 +165,7 @@ public class ItemFrame {
 				// String bootValue = boot.getText();
 				oldItems = new LoadItem().loadItem(itemName.getText(), itemArrayList);
 				Items items = new Items(itemName.getText(), Integer.parseInt(itemValue.getText()));
+				// if the item with input name exist , remove it and add new item. if not, add item
 				if (oldItems == null) {
 					itemArrayList.add(items);
 				}

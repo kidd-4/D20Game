@@ -36,8 +36,10 @@ import save.SaveCharacter;
 
 /**
  * 
- * Map class to initialize the map, menu bar, menu items and panels 
- * 
+ * Map class to initialize the map, menu bar, menu items and panels.
+ * When the map was changed, the map will be repainted.
+ * When player create or edit a map, character, item or campaign, then show the information on the panel
+ *
  * @author grey
  * @version 1.0
  *
@@ -163,11 +165,17 @@ public class Map {
 	public int getNumCols() {
 		return numCols;
 	}
-	
+	/**
+	 * 
+	 * @param numRows numRows
+	 */
 	public void setNumRows(int numRows) {
 		this.numRows = numRows;
 	}
-
+	/**
+	 * 
+	 * @param numCols numCols
+	 */
 	public void setNumCols(int numCols) {
 		this.numCols = numCols;
 	}
@@ -189,7 +197,7 @@ public class Map {
 
 	/**
 	 * This method is used to draw the map in a panel according to different rows and columns.
-	 * @param k  k=1 create the new map, k=2 load a map
+	 * @param k  k=1 create the new map, k=2 load an existed map
 	 */
 	
 	//根据地图的行和列，以及其中的对象来画地图
@@ -231,8 +239,7 @@ public class Map {
 
 		for (int i = 0; i < numRows; i++)
 			for (int j = 0; j < numCols; j++) {
-
-				// panel.setLayout(new GridLayout(numRows,numCols));
+				// draw the map according to different kind of TileType
 				if (map[i][j].getTileType() == TileType.GROUND)
 					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Ground.png")));
 				else if (map[i][j].getTileType() == TileType.WALL) 
@@ -259,11 +266,12 @@ public class Map {
 				
 				if(k==2)
 					panel.repaint(); 
-				
 			}
-
 	}
 	
+	/**
+	 * show the information of selected character
+	 */
 	public void drawInformation(){
 		Characters characters = null;
 		try {
@@ -301,11 +309,13 @@ public class Map {
 			inventory5.setText(characters.getInventory().get(4).getName());
 			inventory6.setText(characters.getInventory().get(5).getName());
 			inventory7.setText(characters.getInventory().get(6).getName());
-			
 		
 		}
 	}
 	
+	/**
+	 * show the backpack of Player
+	 */
 	
 	public void drawBackpackBox() {
 		backpackBox.removeAllItems(); // remove original item list
@@ -320,10 +330,11 @@ public class Map {
 		{
 			backpackBox.addItem(items.getName());
 		}
-		
 	}
 	
-	
+	/**
+	 * show the created campaigns
+	 */
 	public void drawCampaignBox(){
 		campaignBox.removeAllItems(); // remove original campaign list
 		
@@ -340,6 +351,9 @@ public class Map {
 		
 	}
 	
+	/**
+	 * show the created maps
+	 */
 	public void drawMapBox(){
 		mapBox.removeAllItems(); // remove original map list
 		try {
@@ -354,8 +368,9 @@ public class Map {
 			mapBox.addItem(matrix.getName());
 		}
 	}
+	
 	/**
-	 * show characters list in the character box
+	 * show created characters in the character box
 	 */
 	//在面板上显示人物列表
 	public void drawcharacterBox() {
@@ -376,14 +391,13 @@ public class Map {
 		}
 		
 	}
+	
 	/**
-	 * show items list in the item box
+	 * show created items in the item box
 	 */
 	//在面板上显示物品列表
 	public void drawItemBox(){
 			itemBox.removeAllItems();// remove original item list
-			
-		
 		
 				try {
 					itemArrayList = new LoadItem().readItem();// get the item list from file
@@ -392,12 +406,12 @@ public class Map {
 					e.printStackTrace();
 				}
 			
-		 
 			for(Items items : itemArrayList)
 			{
 				itemBox.addItem(items.getName());
 			}
 	}
+	
 	/**
 	 * initialize whole frame and add listener for every menu items
 	 */
@@ -410,6 +424,7 @@ public class Map {
 		 drawMap(1); //initialize map the first
 		 
 		 //显示下拉框选中的人物的信息
+		 // show the information of selected character
 		 showInformation.addActionListener(new ActionListener() {
 			
 			@Override
@@ -419,35 +434,38 @@ public class Map {
 		});
 		 
 		 //把backpack中的装备换到inventory中，并改变人物的属性
+		 // equip selected item in the backpack to the inventory
 		 equip.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String backpackString = backpackBox.getSelectedItem().toString();
 				String invetoryString = null;
+				
+				//eliminate number using regular expression
 				String[] strings = backpackString.split("\\d");//正则表达式去除数字
 				
 				int backpackValue = 0;
 				int inventoryValue = 0;
 				Characters oldCharacter = null;
 				try {
-					//读取characters
-					/* when the character box in the main frame was selected, 
-					 * then we get corresponding character object from the file
-					 */
+					
 					//必须是玩家的名字
-					if(characterBox.getSelectedItem().toString().startsWith("P")||characterBox.getSelectedItem().toString().startsWith("p")){
-					oldCharacter = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
-					}
+					// it must be the Player's name
+					if(characterBox.getSelectedItem().toString().startsWith("P")||characterBox.getSelectedItem().toString().startsWith("p"))
+						oldCharacter = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
+					else
+						JOptionPane.showMessageDialog(null, "Please choose a player", "Alert", JOptionPane.ERROR_MESSAGE);
+						
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
 				if(oldCharacter != null){
-					
 				
 				// 获得backpack物品的value
+				// get value of selected item in the backpack
 				for(Items backpack: oldCharacter.getBackpack()){
 					if(backpack.getName().equals(backpackString)){
 						backpackValue = backpack.getValue();
@@ -455,6 +473,9 @@ public class Map {
 				}
 				
 				// 在inventory中寻找和backpack中对应的物品，如果有，则返回对应物品，如果无，就返回空
+				/* search corresponding item in the inventory with the same type of selected one.
+				 * if exsit, return the item. if not, return empty
+				*/
 				for(Items inventory :oldCharacter.getInventory()){
 					
 					String[] strings2 = inventory.getName().split("\\d");
@@ -470,6 +491,7 @@ public class Map {
 				}
 				
 				//将backpack中的物品换成inventory中的物品
+				// change the the item in the backpack to the item of inventory
 				for(Items backpack:oldCharacter.getBackpack()){
 					//如果有两个相同名字的物品，则会出问题 break可以解决问题
 					if(backpack.getName().equals(backpackString)){
@@ -480,6 +502,7 @@ public class Map {
 				}
 				
 				//将inventory中的物品换成backpack中的物品，并修改对应的属性
+				// change the item in the inventory to the item of backpack and change the attribute of player
 				if(strings[0].equalsIgnoreCase("WEAPON")){
 					oldCharacter.getInventory().get(0).setName(backpackString);
 					oldCharacter.getInventory().get(0).setValue(backpackValue);
@@ -524,6 +547,7 @@ public class Map {
 				}
 				
 				//删除原有的player之后再保存现在的
+				// delete original player and save the edited one
 				for(Characters characters: characterArrayList){
 					if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
 						characterArrayList.remove(characters);
@@ -532,8 +556,6 @@ public class Map {
 				}
 				
 				characterArrayList.add(oldCharacter);
-				
-				//还要保存文件，这里暂时不保存，便于查看效果
 				
 				try {
 					new SaveCharacter().saveCharacter(characterArrayList);
@@ -551,6 +573,7 @@ public class Map {
 			}
 		});
 		 
+		 //open the CampaignFrame
 		 jMenuCampaign.addActionListener(new ActionListener() {
 			
 			@Override
@@ -560,6 +583,7 @@ public class Map {
 			}
 		});
 		 
+		 //open the RowColFrame
 		jMenuMap.addActionListener(new ActionListener() {
 
 			@Override
@@ -570,7 +594,8 @@ public class Map {
 
 			}
 		});
-
+		
+		//open the ItemFrame
 		jMenuItem.addActionListener(new ActionListener() {
 
 			@Override
@@ -580,6 +605,7 @@ public class Map {
 			}
 		});
 
+		//open the CharacterFrame
 		jMenuCharacter.addActionListener(new ActionListener() {
 
 			@Override
@@ -589,6 +615,7 @@ public class Map {
 			}
 		});
 		
+		//open the SaveMapFrame
 		saveMap.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -629,6 +656,7 @@ public class Map {
 			
 		});
 		
+		//open the LoadMapFrame
 		loadMap.addActionListener(new ActionListener() {
 			
 			@Override

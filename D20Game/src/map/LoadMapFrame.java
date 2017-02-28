@@ -16,12 +16,21 @@ import javax.swing.JTextField;
 import characters.Cells;
 import characters.Matrix;
 import load.LoadMap;
-
+/**
+ * LoadMapFrame is used to load an existed map
+ * @author grey
+ * @version 1.0
+ */
 public class LoadMapFrame {
 	
 	int numRows;
 	int numCols;
-			
+	/**
+	 * constructor method
+	 * @param map	Map object
+	 * @param jFrame2  main frame
+	 * @param allMaps  ArrayList<Matrix>
+	 */
 	public LoadMapFrame(Map map, JFrame jFrame2, ArrayList<Matrix> allMaps){
 		JFrame jFrame = new JFrame("Load the map");
 		JButton jButton = new JButton("Load");
@@ -47,6 +56,7 @@ public class LoadMapFrame {
 			}
 		});
 		
+		//load a map
 		jButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -58,7 +68,7 @@ public class LoadMapFrame {
 					cells = new LoadMap().loadMap(allMaps,mapName.getText());
 					
 //					System.out.println(mapName.getText());
-
+					// if the map did not exist, then give an alert
 					if(cells == null)
 						JOptionPane.showMessageDialog(null, "There is no such a map", "Alert", JOptionPane.ERROR_MESSAGE);
 					

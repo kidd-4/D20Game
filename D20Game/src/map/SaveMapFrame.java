@@ -17,9 +17,20 @@ import characters.Cells;
 import characters.Matrix;
 import load.LoadMap;
 import save.SaveMap;
-
+/**
+ *  SaveMapFrame is used to save a map
+ * @author grey
+ * @version 1.0
+ */
 public class SaveMapFrame {
 	
+	/**
+	 * constructor method
+	 * @param map2 		Map object
+	 * @param map		Cells[][]
+	 * @param jFrame2   main frame
+	 * @param allMaps   ArrayList<Matrix>
+	 */
 	public SaveMapFrame(Map map2, Cells[][] map, JFrame jFrame2, ArrayList<Matrix> allMaps){
 		JFrame jFrame = new JFrame("Save the map");
 		JButton jButton = new JButton("Save");
@@ -45,11 +56,14 @@ public class SaveMapFrame {
 			}
 		});
 		
+		// save the map
 		jButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				Matrix oldMap = null;
+				
 				try {
 					oldMap = new LoadMap().loadMap2(allMaps, mapName.getText());
 				} catch (IOException e2) {

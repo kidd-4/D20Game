@@ -13,7 +13,7 @@ import javax.swing.JTextField;
 
 /**
  * 
- * This class is used to draw the RowColFrame to change rows and columns.
+ * This class is used to show the RowColFrame to change rows and columns.
  * In this way, users can create a map they want
  * 
  * @author grey
@@ -28,7 +28,7 @@ public class RowColFrame {
 	/**
 	 * This method is used to transmit the modified rows and columns to the main frame
 	 * @param map  The main frame of map
-	 * @param jFrame2 
+	 * @param jFrame2  main frame
 	 */
 	
 	public RowColFrame(Map map, JFrame jFrame2)
@@ -61,6 +61,7 @@ public class RowColFrame {
 			}
 		});
 		
+		// draw the map according to different rows and columns
 		jButton.addActionListener(new ActionListener() {
 			
 			@Override
