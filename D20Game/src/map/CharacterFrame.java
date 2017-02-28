@@ -14,11 +14,13 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import characters.Characters;
 import characters.Items;
 import enumclass.Orientation;
+import load.LoadCharacter;
 import load.LoadItem;
 import save.SaveCharacter;
 
@@ -26,7 +28,8 @@ import save.SaveCharacter;
 public class CharacterFrame {
 
 	public Map map;
-	public ArrayList<Items> itemArrayList = new ArrayList<Items>();//显示创建人物时的物品下拉框
+//	public ArrayList<Items> newItemArrayList = new ArrayList<Items>();//显示创建人物时的物品下拉框
+	Characters characters = null;
 	
 	private JTextField name = new JTextField();
 	private JTextField level = new JTextField();
@@ -67,10 +70,11 @@ public class CharacterFrame {
 	private JTextField bootName = new JTextField();
 
 	
-	public CharacterFrame(Map map, JFrame jFrame2, ArrayList<Characters> characterArrayList){
+	public CharacterFrame(Map map, JFrame jFrame2, ArrayList<Characters> characterArrayList, ArrayList<Items> itemArrayList){
 		JFrame jFrame = new JFrame("Character");
 		JButton save = new JButton("Save");
 		JButton roll = new JButton("Roll");
+		JButton load = new JButton("Load a character");
 		JButton Modify = new JButton("Modify");
 		JButton loadItem = new JButton("Load an item");
 		JComboBox<String> jComboBox = new JComboBox<String>();
@@ -275,13 +279,15 @@ public class CharacterFrame {
 		jFrame.add(roll);
 		jFrame.add(Modify);
 		jFrame.add(save);
+		jFrame.add(load);
 		
-		try {
-			itemArrayList = new LoadItem().readItem();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//			try {
+//				newItemArrayList = new LoadItem().readItem();
+//			} catch (ClassNotFoundException | IOException e3) {
+//				// TODO Auto-generated catch block
+//				e3.printStackTrace();
+//			}
+		
 		for(Items items : itemArrayList)
 		{
 			jComboBox.addItem(items.getName());
@@ -296,6 +302,65 @@ public class CharacterFrame {
 			public void windowClosing(WindowEvent e){
 				jFrame.dispose();
 				jFrame2.setEnabled(true);
+			}
+		});
+		
+		load.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				try {
+					characters = new LoadCharacter().loadcharacter(name.getText(), characterArrayList);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				if(characters == null)
+					JOptionPane.showMessageDialog(null, "There is no such a character", "Alert", JOptionPane.ERROR_MESSAGE);
+				else{
+					name.setText(characters.getName());
+					level.setText(String.valueOf(characters.getLevel()));
+					hitpoints.setText(String.valueOf(characters.getHitpoints()));
+					movement.setText(String.valueOf(characters.getMovement()));
+					strength.setText(String.valueOf(characters.getStrength()));
+					modStr.setText(String.valueOf(characters.getModStr()));
+					dexterity.setText(String.valueOf(characters.getDexterity()));
+					modDex.setText(String.valueOf(characters.getModDex()));
+					constitution.setText(String.valueOf(characters.getConstitution()));
+					modCon.setText(String.valueOf(characters.getModCon()));
+					wisdom.setText(String.valueOf(characters.getWisdom()));
+					modWis.setText(String.valueOf(characters.getModWis()));
+					intelligence.setText(String.valueOf(characters.getIntelligence()));
+					modInt.setText(String.valueOf(characters.getModInt()));
+					charisma.setText(String.valueOf(characters.getCharisma()));
+					modCha.setText(String.valueOf(characters.getModCha()));
+					
+					orient.setText(String.valueOf(characters.getOrient()));
+					armorClass.setText(String.valueOf(characters.getArmorClass()));
+					attackBonus.setText(String.valueOf(characters.getAttackBonus()));
+					damageBonus.setText(String.valueOf(characters.getDamageBonus()));
+					
+					weaponName.setText(characters.getInventory().get(0).getName());
+					weapon.setText(String.valueOf(characters.getInventory().get(0).getValue()));
+					shieldName.setText(characters.getInventory().get(1).getName());
+					shield.setText(String.valueOf(characters.getInventory().get(1).getValue()));
+					helmetName.setText(characters.getInventory().get(2).getName());
+					helmet.setText(String.valueOf(characters.getInventory().get(2).getValue()));
+					armorName.setText(characters.getInventory().get(3).getName());
+					armor.setText(String.valueOf(characters.getInventory().get(3).getValue()));
+					ringName.setText(characters.getInventory().get(4).getName());
+					ring.setText(String.valueOf(characters.getInventory().get(4).getValue()));
+					beltName.setText(characters.getInventory().get(5).getName());
+					belt.setText(String.valueOf(characters.getInventory().get(5).getValue()));
+					bootName.setText(characters.getInventory().get(6).getName());
+					boot.setText(String.valueOf(characters.getInventory().get(6).getValue()));
+					
+				}
+					
+				
+				
 			}
 		});
 		
@@ -319,50 +384,46 @@ public class CharacterFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				String string = jComboBox.getSelectedItem().toString();
-				try {
-					String newString = new LoadItem().loadItem(string);
-					String[] strings =newString.split(" ");
-					String name = strings[0];
-					String value = strings[1];
-					if(name.startsWith("W")||name.startsWith("w"))//大小写问题 正则表达式
-					{
-						weaponName.setText(name);
-						weapon.setText(value);
-					}
-					else if(name.startsWith("S")||name.startsWith("s"))
-					{
-						shieldName.setText(name);
-						shield.setText(value);
-					}
-					else if(name.startsWith("H")||name.startsWith("h"))
-					{
-						helmetName.setText(name);
-						helmet.setText(value);
-					}
-					else if(name.startsWith("A")||name.startsWith("a"))
-					{
-						armorName.setText(name);
-						armor.setText(value);
-					}
-					else if(name.startsWith("R")||name.startsWith("r"))
-					{
-						ringName.setText(name);
-						ring.setText(value);
-					}
-					else if(name.startsWith("BELT")||name.startsWith("belt"))
-					{
-						beltName.setText(name);
-						belt.setText(value);
-					}
-					else if(name.startsWith("BOOT")||name.startsWith("boot"))
-					{
-						bootName.setText(name);
-						boot.setText(value);
-					}
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				Items items = new LoadItem().loadItem(string,itemArrayList);
+				String name = items.getName();
+				String value = String.valueOf(items.getValue());
+				
+				if(name.startsWith("W")||name.startsWith("w"))//大小写问题 正则表达式
+				{
+					weaponName.setText(name);
+					weapon.setText(value);
+				}
+				else if(name.startsWith("S")||name.startsWith("s"))
+				{
+					shieldName.setText(name);
+					shield.setText(value);
+				}
+				else if(name.startsWith("H")||name.startsWith("h"))
+				{
+					helmetName.setText(name);
+					helmet.setText(value);
+				}
+				else if(name.startsWith("A")||name.startsWith("a"))
+				{
+					armorName.setText(name);
+					armor.setText(value);
+				}
+				else if(name.startsWith("R")||name.startsWith("r"))
+				{
+					ringName.setText(name);
+					ring.setText(value);
+				}
+				else if(name.startsWith("BELT")||name.startsWith("belt"))
+				{
+					beltName.setText(name);
+					belt.setText(value);
+				}
+				else if(name.startsWith("BOOT")||name.startsWith("boot"))
+				{
+					bootName.setText(name);
+					boot.setText(value);
 				}
 				
 			}
@@ -374,6 +435,7 @@ public class CharacterFrame {
 			public void actionPerformed(ActionEvent e) {
 			ArrayList<Items> newItemArrayList = new ArrayList<Items>();
 			ArrayList<Items> backpack = new ArrayList<Items>();
+			
 			newItemArrayList.add(new Items(weaponName.getText(), Integer.parseInt(weapon.getText())));
 			newItemArrayList.add(new Items(shieldName.getText(), Integer.parseInt(shield.getText())));
 			newItemArrayList.add(new Items(helmetName.getText(), Integer.parseInt(helmet.getText())));
@@ -392,27 +454,40 @@ public class CharacterFrame {
 			backpack.add(new Items("EMPTY", 0));
 			backpack.add(new Items("EMPTY", 0));
 			backpack.add(new Items("EMPTY", 0));
-			Characters characters = new Characters(name.getText(),Integer.parseInt(level.getText()), Integer.parseInt(hitpoints.getText()),
+			
+			
+
+			Characters oldcharacters = null;
+			try {
+				oldcharacters = new LoadCharacter().loadcharacter(name.getText(), characterArrayList);
+			} catch (IOException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+			
+			characters = new Characters(name.getText(),Integer.parseInt(level.getText()), Integer.parseInt(hitpoints.getText()),
 					Integer.parseInt(movement.getText()), Integer.parseInt(strength.getText()),Integer.parseInt(modStr.getText()),
 					Integer.parseInt(dexterity.getText()),Integer.parseInt(modDex.getText()), Integer.parseInt(constitution.getText()),Integer.parseInt(modCon.getText()),
 					Integer.parseInt(wisdom.getText()),Integer.parseInt(modWis.getText()),Integer.parseInt(intelligence.getText()),Integer.parseInt(modInt.getText()),
 					Integer.parseInt(charisma.getText()),Integer.parseInt(modCha.getText()),Enum.valueOf(Orientation.class, orient.getText()),
 					Integer.parseInt(armorClass.getText()),Integer.parseInt(attackBonus.getText()),Integer.parseInt(damageBonus.getText()),newItemArrayList,backpack);
 			
-			characterArrayList.add(characters);
+			if(oldcharacters == null)
+				characterArrayList.add(characters);
+			else {
+				characterArrayList.remove(oldcharacters);
+				characterArrayList.add(characters);
+				
+			}
+			
+			
 			try {
 				new SaveCharacter().saveCharacter(characterArrayList);
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-//			try {
-//				new SaveCharacter().saveCharacter(characters);
-//			} catch (IOException e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			};
+
 			
 			map.drawcharacterBox();
 			map.drawBackpackBox();

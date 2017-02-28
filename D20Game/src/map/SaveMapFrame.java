@@ -15,6 +15,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import characters.Cells;
 import characters.Matrix;
+import load.LoadMap;
 import save.SaveMap;
 
 public class SaveMapFrame {
@@ -48,8 +49,25 @@ public class SaveMapFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				Matrix oldMap = null;
+				try {
+					oldMap = new LoadMap().loadMap2(allMaps, mapName.getText());
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+				
 				Matrix matrix = new Matrix(map, mapName.getText());
-				allMaps.add(matrix);
+				
+				if(oldMap == null){
+					allMaps.add(matrix);
+				}
+				else{
+					allMaps.remove(oldMap);
+					allMaps.add(matrix);
+				}
+				
+				
 				
 				try {
 					new SaveMap().saveMap(allMaps);

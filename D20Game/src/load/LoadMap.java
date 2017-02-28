@@ -18,6 +18,7 @@ public class LoadMap {
 		{
 			if(matrix.getName().equals(string)){
 				newMatrix = matrix;
+				break;
 			}
 				
 		}
@@ -44,7 +45,6 @@ public class LoadMap {
 		for(Matrix matrix: allMaps){
 			if(matrix.getName().equals(string3)){
 				cells = matrix.getMap();
-				System.out.println(matrix.getName());
 				break;
 			}
 		}

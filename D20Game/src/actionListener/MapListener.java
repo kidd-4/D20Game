@@ -38,6 +38,7 @@ public class MapListener implements ActionListener{
 	Items items;
 	Characters characters;
 	ArrayList<Characters> characterArrayList;
+	ArrayList<Items> itemArrayList;
 	
 	int x,y,numRows,numCols;
 	/**
@@ -46,31 +47,24 @@ public class MapListener implements ActionListener{
 	 * @param itemBox	the item box object from the main frame
 	 * @param characterBox	the character box object from the main frame
 	 * @param characterArrayList 
+	 * @param itemArrayList 
 	 */
-	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox, ArrayList<Characters> characterArrayList) {
+	public MapListener(Map map, JComboBox<String> itemBox, JComboBox<String> characterBox, ArrayList<Characters> characterArrayList, ArrayList<Items> itemArrayList) {
 		this.map = map;
 		this.itemBox = itemBox;
 		this.characterBox = characterBox;
 		this.characterArrayList = characterArrayList;
+		this.itemArrayList = itemArrayList;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton jButton = (JButton) e.getSource();
-//		System.out.println(itemBox.getSelectedItem().toString());
-//		System.out.println(characterBox.getSelectedItem().toString());
-		try {
-			 //读取items
-			 /* when the item box in the main frame was selected, 
-			  * then we get corresponding item String from the file
-			 */ 
-			 item = new LoadItem().loadItem(itemBox.getSelectedItem().toString());
-			 strings = item.split(" ");
-			 items = new Items(strings[0], Integer.parseInt(strings[1]));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+//读取items
+		 /* when the item box in the main frame was selected, 
+		  * then we get corresponding item String from the file
+		 */ 
+		 items = new LoadItem().loadItem(itemBox.getSelectedItem().toString(),itemArrayList);
 		
 		try {
 			//读取characters

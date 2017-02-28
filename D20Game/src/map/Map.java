@@ -21,12 +21,14 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import actionListener.MapListener;
+import characters.Campaigns;
 import characters.Cells;
 import characters.Characters;
 import characters.Ground;
 import characters.Items;
 import characters.Matrix;
 import enumclass.TileType;
+import load.LoadCampaign;
 import load.LoadCharacter;
 import load.LoadItem;
 import load.LoadMap;
@@ -51,7 +53,7 @@ public class Map {
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
 	public ArrayList<Items> backpack = new ArrayList<Items>();
 	public ArrayList<Matrix> allMaps = new ArrayList<Matrix>();
-	public ArrayList<ArrayList<Matrix>> campaigns = new ArrayList<ArrayList<Matrix>>();
+	public ArrayList<Campaigns> campaigns = new ArrayList<Campaigns>();
 
 	public int width, height;
 	public String title;
@@ -69,8 +71,10 @@ public class Map {
 	public JLabel itemBoxLabel =  new JLabel("Created Items");
 	public JComboBox<String> characterBox = new JComboBox<String>();// show created character in the file
 	public JLabel characterBoxLabel =  new JLabel("Created Characters");
-	public JComboBox<String> mapBox = new JComboBox<String>();// show created character in the file
+	public JComboBox<String> mapBox = new JComboBox<String>();// show created map in the file
 	public JLabel mapBoxLabel =  new JLabel("Created Maps");
+	public JComboBox<String> campaignBox = new JComboBox<String>();// show created character in the file
+	public JLabel campaignBoxLabel =  new JLabel("Created Campaigns");
 	public JComboBox<String> backpackBox= new JComboBox<String>();// show backpack of Player
 	public JLabel backpackBoxLabel =  new JLabel("Backpack of Player");
 	
@@ -82,9 +86,9 @@ public class Map {
 	public JMenu jMenuLoad = new JMenu("Load");
 	public JMenuItem loadMap = new JMenuItem("Load Map");
 	public JMenuItem jMenuMap = new JMenuItem("Create a map");
-	public JMenuItem jMenuCharacter = new JMenuItem("Create a character");
-	public JMenuItem jMenuItem = new JMenuItem("Create an item");
-	public JMenuItem jMenuCampaign = new JMenuItem("Create a compaign");
+	public JMenuItem jMenuCharacter = new JMenuItem("Create/Edit a character");
+	public JMenuItem jMenuItem = new JMenuItem("Create/Edit an item");
+	public JMenuItem jMenuCampaign = new JMenuItem("Create/Edit a compaign");
 	public JMenuItem jMenuInstruction = new JMenuItem("Instruction");
 	
 	public JLabel name = new JLabel("Name");
@@ -195,8 +199,8 @@ public class Map {
 		panel.setLayout(new GridLayout(numRows, numCols));
 //		panelShow.setBounds(width * 4 / 5, 0, width / 5, height);
 		panelContainer.setBounds(0, 0, 680, height);
-		showPanel.setBounds(680, 0, width-680, height/5);
-		characterPanel.setBounds(680, height/5,width-680, height*4/5);
+		showPanel.setBounds(680, 0, width-680, height/4);
+		characterPanel.setBounds(680, height/4,width-680, height*3/4);
 		
 		
 		drawItemBox(); //show items in the file
@@ -204,6 +208,7 @@ public class Map {
 		drawBackpackBox();
 		drawInformation();
 		drawMapBox();
+		drawCampaignBox();
 		
 //		 System.out.println("numRows: "+numRows);
 //		 System.out.println("numCols: "+numCols);
@@ -247,7 +252,7 @@ public class Map {
 				jButton.putClientProperty("Cols", j);
 				jButton.setBorderPainted(false);
 				jButton.setBounds(j * 33, i * 33, 32, 32); // j represents width, i represent height
-				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox,characterArrayList));
+				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox,characterArrayList,itemArrayList));
 
 				jButtons[i][j] = jButton;
 				panel.add(jButtons[i][j]);
@@ -318,17 +323,31 @@ public class Map {
 		
 	}
 	
+	
+	public void drawCampaignBox(){
+		campaignBox.removeAllItems(); // remove original campaign list
+		
+		try {
+			campaigns = new LoadCampaign().readCampaign();
+		} catch (ClassNotFoundException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		for(Campaigns c:campaigns ){
+			campaignBox.addItem(c.getName());
+		}
+		
+	}
+	
 	public void drawMapBox(){
 		mapBox.removeAllItems(); // remove original map list
 		try {
 			allMaps = new LoadMap().readMap();
-		} catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException | IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
 		
 		for(Matrix matrix: allMaps)
 		{
@@ -365,11 +384,15 @@ public class Map {
 			itemBox.removeAllItems();// remove original item list
 			
 		
-		 try {
-				itemArrayList = new LoadItem().readItem();// get the item list from file
-			} catch (IOException e1) {
-				e1.printStackTrace();
-			}
+		
+				try {
+					itemArrayList = new LoadItem().readItem();// get the item list from file
+				} catch (ClassNotFoundException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
+		 
 			for(Items items : itemArrayList)
 			{
 				itemBox.addItem(items.getName());
@@ -561,7 +584,7 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CharacterFrame(Map.this,jFrame,characterArrayList);//open CharacterFrame
+				new CharacterFrame(Map.this,jFrame,characterArrayList,itemArrayList);//open CharacterFrame
 				jFrame.setEnabled(false);
 			}
 		});
@@ -588,7 +611,7 @@ public class Map {
 				}
 				
 				if(flagEntry==0)
-				JOptionPane.showMessageDialog(null, "There is no Entry", "Alert", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "There is no Entry", "Alert", JOptionPane.ERROR_MESSAGE);
 				if(flagExit==0)
 					JOptionPane.showMessageDialog(null, "There is no Exit", "Alert", JOptionPane.ERROR_MESSAGE);
 				if(flagHero==0)
@@ -643,6 +666,8 @@ public class Map {
 		showPanel.add(characterBox);
 		showPanel.add(mapBoxLabel);
 		showPanel.add(mapBox);
+		showPanel.add(campaignBoxLabel);
+		showPanel.add(campaignBox);
 		showPanel.add(backpackBoxLabel);
 		showPanel.add(backpackBox);
 		showPanel.add(equip);
