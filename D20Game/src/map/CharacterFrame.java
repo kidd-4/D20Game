@@ -291,12 +291,7 @@ public class CharacterFrame {
 		jFrame.add(save);
 		jFrame.add(load);
 		
-//			try {
-//				newItemArrayList = new LoadItem().readItem();
-//			} catch (ClassNotFoundException | IOException e3) {
-//				// TODO Auto-generated catch block
-//				e3.printStackTrace();
-//			}
+
 		// display all the items which are created
 		for(Items items : itemArrayList)
 			jComboBox.addItem(items.getName());
@@ -305,7 +300,6 @@ public class CharacterFrame {
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
 		jFrame.setSize(new Dimension(350, 800));
 		jFrame.setVisible(true);
-//		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				jFrame.dispose();
@@ -506,7 +500,6 @@ public class CharacterFrame {
 				jFrame2.setEnabled(true);
 				jFrame.dispose();
 				
-//				jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
 				
 			}

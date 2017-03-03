@@ -91,7 +91,6 @@ public class MapListener implements ActionListener{
 					newMap = map.getMap();
 					numRows = newMap[0][0].getX();// the total rows of map
 					numCols = newMap[0][0].getY();
-//					newMap[x][y].setTileType(TileType.Ground);
 					newMap[x][y] = new Cells(TileType.GROUND, numRows, numCols, new Ground(TileType.GROUND));
 					map.setMap(newMap,numRows,numCols);
 					map.drawMap(2);
@@ -102,7 +101,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.WALL);
 				newMap[x][y] = new Cells(TileType.WALL, numRows, numCols, new Wall(TileType.WALL));
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
@@ -114,7 +112,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.CHEST);
 				newMap[x][y] = new Cells(TileType.CHEST, numRows, numCols, items);
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
@@ -126,7 +123,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.HERO);
 				newMap[x][y] = new Cells(TileType.HERO, numRows, numCols, characters);
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
@@ -138,7 +134,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.MONSTER);
 				newMap[x][y] = new Cells(TileType.MONSTER, numRows, numCols, characters);
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
@@ -150,7 +145,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.EXIT);
 				newMap[x][y] = new Cells(TileType.EXIT, numRows, numCols, new Exit(TileType.EXIT));
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);
@@ -162,7 +156,6 @@ public class MapListener implements ActionListener{
 				newMap = map.getMap();
 				numRows = newMap[0][0].getX();
 				numCols = newMap[0][0].getY();
-//				newMap[x][y].setTileType(TileType.ENTRY);
 				newMap[x][y] = new Cells(TileType.ENTRY, numRows, numCols, new Entry(TileType.ENTRY));
 				map.setMap(newMap,numRows,numCols);
 				map.drawMap(2);

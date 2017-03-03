@@ -48,7 +48,6 @@ public class LoadMapFrame {
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
 		jFrame.setSize(new Dimension(300, 300));
 		jFrame.setVisible(true);
-//		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				jFrame.dispose();
@@ -67,7 +66,6 @@ public class LoadMapFrame {
 					Cells[][] cells = null;
 					cells = new LoadMap().loadMap(allMaps,mapName.getText());
 					
-//					System.out.println(mapName.getText());
 					// if the map did not exist, then give an alert
 					if(cells == null)
 						JOptionPane.showMessageDialog(null, "There is no such a map", "Alert", JOptionPane.ERROR_MESSAGE);
@@ -78,7 +76,6 @@ public class LoadMapFrame {
 					map.setMap(cells,numRows,numCols);
 					map.drawMap(2);
 					}
-//					System.out.println("-----");
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

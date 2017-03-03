@@ -64,7 +64,6 @@ public class Map {
 	public JButton equip = new JButton("Equip item");
 	public JButton showInformation = new JButton("Show Information");
 	public JPanel panel = new JPanel();
-//	public JPanel panelShow = new JPanel();
 	public JPanel panelContainer = new JPanel(); // contain the panel which contains the map
 	public JPanel showPanel = new JPanel(); //contain the item and character combo box 
 	public JPanel characterPanel = new JPanel();
@@ -205,7 +204,6 @@ public class Map {
 
 		panel.setBounds(0, 0, numCols * 33,numRows * 33);// rows represents height, cols represents width
 		panel.setLayout(new GridLayout(numRows, numCols));
-//		panelShow.setBounds(width * 4 / 5, 0, width / 5, height);
 		panelContainer.setBounds(0, 0, 680, height);
 		showPanel.setBounds(680, 0, width-680, height/4);
 		characterPanel.setBounds(680, height/4,width-680, height*3/4);
@@ -218,8 +216,6 @@ public class Map {
 		drawMapBox();
 		drawCampaignBox();
 		
-//		 System.out.println("numRows: "+numRows);
-//		 System.out.println("numCols: "+numCols);
 
 		if (k == 1) {
 			map = new Cells[numRows][numCols];
@@ -230,9 +226,6 @@ public class Map {
 				}
 		}
 		
-//		for(int i=0;i<numRows;i++)
-//			for(int j=0;j<numCols;j++)
-//				System.out.println(map[i][j]);
 		
 		if(k==2)
 			panel.removeAll();
@@ -738,13 +731,8 @@ public class Map {
 		characterPanel.add(inventory7);
 		
 		
-		
-//		panelShow.setLayout(new FlowLayout());
-//		panelShow.add(itemPanel);
-//		panelShow.add(characterPanel);
 
 		jFrame.add(panel);
-//		jFrame.add(panelShow);
 		jFrame.add(showPanel);
 		jFrame.add(characterPanel);
 		jFrame.add(panelContainer);
@@ -756,7 +744,69 @@ public class Map {
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	}
+	
+	
+	public boolean influence(int value,int inventory, int backpack){
+		if(value+inventory+backpack != value)
+		return true;
+		else
+		return false;
+	}
+	
+	public boolean equipWeapon(String name){
+		if(name.equalsIgnoreCase("WEAPON"))
+			return true;
+		else
+		return false;
+		
+	}
+	
+	public boolean equipShield(String name){
+		if(name.equalsIgnoreCase("SHIELD"))
+			return true;
+		else
+		return false;
+		
+	}
 
+	public boolean exitGlobal(Cells[][] map2){
+		for (int i = 0; i < map2.length; i++) {
+			for (int j = 0; j < map2[i].length; j++) {
+				if (this.map[i][j].getTileType().equals(TileType.EXIT)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	public boolean entryGlobal(Cells[][] map2){
+		for (int i = 0; i < map2.length; i++) {
+			for (int j = 0; j < map2[i].length; j++) {
+				if (this.map[i][j].getTileType().equals(TileType.ENTRY)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
+	
+	public boolean playerGlobal(Cells[][] map2){
+		for (int i = 0; i < map2.length; i++) {
+			for (int j = 0; j < map2[i].length; j++) {
+				if (this.map[i][j].getTileType().equals(TileType.HERO)) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+		
+	}
 	
 
 }

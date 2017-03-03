@@ -29,20 +29,7 @@ public class LoadItem {
 			}
 		}
 		return items;
-//		String filePath = "/Users/grey/Desktop/Test/Items.txt";
-//		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
-//		
-//		String string2 = null;
-//		String newString = null;
-//		while((string2 = bufferedReader.readLine())!= null){
-//			String[] strings = string2.split(" ");
-//			if(string.equals(strings[0]))
-//			newString = string2;
-//		}
-//		
-//		bufferedReader.close();
-//		return newString;
-		
+
 	}
 	/**
 	 * display all the items which are created
@@ -61,20 +48,7 @@ public class LoadItem {
         objectInputStream.close();
         
         return arrayList;
-//		ArrayList<Items> arrayList = new ArrayList<Items>();
-//		Items items;
-//		String filePath = "/Users/grey/Desktop/Test/Items.txt";
-//		BufferedReader bufferedReader = new BufferedReader(new FileReader(filePath));
-//		
-//		String string = null;
-//		while((string = bufferedReader.readLine())!= null){
-//			String[] strings = string.split(" ");
-//			items = new Items(strings[0], Integer.parseInt(strings[1]));
-//			arrayList.add(items);
-//		}
-//		
-//		bufferedReader.close();
-//		return arrayList;
+
 		
 	}
 

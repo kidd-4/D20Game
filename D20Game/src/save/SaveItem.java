@@ -26,18 +26,7 @@ public class SaveItem {
         objectOutputStream.writeObject(arrayList);
         objectOutputStream.flush();
         objectOutputStream.close();
-        
-//		String filePath = "/Users/grey/Desktop/Test/Items.txt"; //save different maps
-//		BufferedWriter bufferedWriter  = new BufferedWriter(new FileWriter(filePath));
-//		
-//		for(Items items:arrayList){
-//			bufferedWriter.write(items.getName()+" "+items.getValue());
-//			bufferedWriter.flush();
-//			bufferedWriter.newLine();
-//		}
-//		
-//		
-//		bufferedWriter.close();
+
 		
 	}
 }

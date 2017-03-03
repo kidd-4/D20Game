@@ -53,7 +53,6 @@ public class RowColFrame {
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
 		jFrame.setSize(new Dimension(300, 300));
 		jFrame.setVisible(true);
-//		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				jFrame.dispose();
@@ -69,12 +68,9 @@ public class RowColFrame {
 				
 				map.setNumRows(Integer.parseInt(jTextRows.getText()));
 				map.setNumCols(Integer.parseInt(jTextColumns.getText()));
-//				System.out.println(jTextRows.getText());
-//				System.out.println(jTextColumns.getText());
 				map.drawMap(1);
 				jFrame2.setEnabled(true);
 				jFrame.dispose();
-//				jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 				
 			}
 		});

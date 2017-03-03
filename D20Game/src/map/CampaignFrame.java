@@ -163,9 +163,7 @@ public class CampaignFrame {
 				//if oldCampaign exit,delete original campaign and add new campaign. if not, just add new campaign
 				if(oldCampaign == null)//create
 				{
-//				Campaigns campaigns = new Campaigns(campaign, campaignName.getText());
 				editCampaigns = new Campaigns(campaign, campaignName.getText());
-//				editCampaigns.setName(campaignName.getText());
 				campaignArraylist.add(editCampaigns);
 				}
 				else{//edit

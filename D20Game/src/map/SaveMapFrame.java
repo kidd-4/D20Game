@@ -48,7 +48,6 @@ public class SaveMapFrame {
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
 		jFrame.setSize(new Dimension(300, 300));
 		jFrame.setVisible(true);
-//		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e){
 				jFrame.dispose();
