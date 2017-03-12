@@ -1,4 +1,4 @@
-package map;
+package frame;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,8 +13,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import characters.Items;
+
 import load.LoadItem;
+import objects.Items;
 import save.SaveItem;
 /**
  * ItemFrame is used to create a new Item or edit a Item

@@ -5,7 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import characters.Characters;
+
+import objects.Characters;
 /**
  * SaveCharacter class is used to save the characters to the file
  * @author grey
@@ -18,7 +19,7 @@ public class SaveCharacter {
 	 * @throws IOException
 	 */
 	public void saveCharacter(ArrayList<Characters> arrayList) throws IOException{
-		File output = new File("/Users/grey/Desktop/Test/Characters.txt");
+		File output = new File("file/Characters.txt");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(output));
         objectOutputStream.writeObject(arrayList);
         objectOutputStream.flush();

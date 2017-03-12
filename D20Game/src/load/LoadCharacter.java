@@ -5,8 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import characters.Characters;
-import characters.Items;
+
+import objects.Characters;
+import objects.Items;
 /**
  * LoadCharacter class contains method which return the variable in the character
  * @author grey
@@ -64,7 +65,7 @@ public class LoadCharacter {
 	public ArrayList<Characters> readCharacter() throws IOException, ClassNotFoundException{
 		
 		ArrayList<Characters> arrayList = new ArrayList<Characters>();
-		File input = new File("/Users/grey/Desktop/Test/Characters.txt");
+		File input = new File("file/Characters.txt");
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(input));
         arrayList = (ArrayList<Characters>) objectInputStream.readObject();
         objectInputStream.close();

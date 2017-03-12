@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 
-import characters.Cells;
-import characters.Characters;
-import characters.Entry;
-import characters.Exit;
-import characters.Ground;
-import characters.Items;
-import characters.Wall;
-import map.Map;
+import objects.Cells;
+import objects.Characters;
+import objects.Entry;
+import objects.Exit;
+import objects.Ground;
+import objects.Items;
+import objects.Wall;
 import enumclass.TileType;
+import frame.Map;
 import load.LoadCharacter;
 import load.LoadItem;
 

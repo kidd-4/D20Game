@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import characters.Campaigns;
+
+import objects.Campaigns;
 /**
  * LoadCampaign class contains methods which get ArrayList<Campaigns> or Campaigns
  * @author grey
@@ -24,7 +25,7 @@ public class LoadCampaign {
 	public ArrayList<Campaigns> readCampaign() throws IOException, ClassNotFoundException{
 		
 		ArrayList<Campaigns> arrayList = new ArrayList<Campaigns>();
-		File input = new File("/Users/grey/Desktop/Test/Campaigns.txt");
+		File input = new File("file/Campaigns.txt");
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(input));
         arrayList = (ArrayList<Campaigns>) objectInputStream.readObject();
         objectInputStream.close();

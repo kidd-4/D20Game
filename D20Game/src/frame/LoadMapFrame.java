@@ -1,4 +1,4 @@
-package map;
+package frame;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -13,9 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import characters.Cells;
-import characters.Matrix;
+
 import load.LoadMap;
+import objects.Cells;
+import objects.Matrix;
 /**
  * LoadMapFrame is used to load an existed map
  * @author grey

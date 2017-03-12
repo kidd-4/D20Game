@@ -2,7 +2,7 @@ package launch;
 
 
 
-import map.Map;
+import frame.Map;
 
 /**
  * Main class to launch the program

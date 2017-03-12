@@ -1,24 +1,23 @@
-package characters;
+package objects;
 
 import java.io.Serializable;
 
 import enumclass.TileType;
 /**
- * Wall class represents an wall object
+ * Entry class is the object of Entry
  * @author grey
- *@version 1.0
+ *	@version 1.0       
  */
 @SuppressWarnings("serial")
-public class Wall implements Serializable{
-	boolean through;
+public class Entry implements Serializable{
+	boolean pass;
 	TileType tileType;
 	/**
 	 * constructor method
 	 * @param tileType tileType
 	 */
-	public Wall(TileType tileType){
+	public Entry(TileType tileType){
 		this.tileType = tileType;
-		
 	}
 	/**
 	 * 

@@ -1,4 +1,4 @@
-package map;
+package frame;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,17 +21,17 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import actionListener.MapListener;
-import characters.Campaigns;
-import characters.Cells;
-import characters.Characters;
-import characters.Ground;
-import characters.Items;
-import characters.Matrix;
 import enumclass.TileType;
 import load.LoadCampaign;
 import load.LoadCharacter;
 import load.LoadItem;
 import load.LoadMap;
+import objects.Campaigns;
+import objects.Cells;
+import objects.Characters;
+import objects.Ground;
+import objects.Items;
+import objects.Matrix;
 import save.SaveCharacter;
 
 /**

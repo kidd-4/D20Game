@@ -1,4 +1,4 @@
-package map;
+package frame;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import characters.Campaigns;
-import characters.Matrix;
 import load.LoadCampaign;
 import load.LoadMap;
+import objects.Campaigns;
+import objects.Matrix;
 import save.SaveCampaign;
 /**
  * CampaignFrame is used to create a new campaign or edit a campaign

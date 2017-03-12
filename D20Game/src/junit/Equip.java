@@ -5,11 +5,11 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import characters.Cells;
-import characters.Exit;
-import characters.Ground;
 import enumclass.TileType;
-import map.Map;
+import frame.Map;
+import objects.Cells;
+import objects.Exit;
+import objects.Ground;
 
 public class Equip {
 

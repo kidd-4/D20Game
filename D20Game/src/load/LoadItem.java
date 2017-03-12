@@ -5,7 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import characters.Items;
+
+import objects.Items;
 /**
  * LoadItem class contains methods which return Items or ArrayList<Items>
  * @author grey
@@ -42,7 +43,7 @@ public class LoadItem {
 	public ArrayList<Items> readItem() throws IOException, ClassNotFoundException{
 		
 		ArrayList<Items> arrayList = new ArrayList<Items>();
-		File input = new File("/Users/grey/Desktop/Test/Items.txt");
+		File input = new File("file/Items.txt");
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(input));
         arrayList = (ArrayList<Items>) objectInputStream.readObject();
         objectInputStream.close();

@@ -5,8 +5,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
-import characters.Cells;
-import characters.Matrix;
+
+import objects.Cells;
+import objects.Matrix;
 /**
  * LoadMap contains method that return Matrix or ArrayList<Matrix> or Cells[][]
  * @author grey
@@ -46,7 +47,7 @@ public class LoadMap {
 	public ArrayList<Matrix> readMap() throws IOException, ClassNotFoundException{
 		
 		ArrayList<Matrix> arrayList = new ArrayList<Matrix>();
-		File input = new File("/Users/grey/Desktop/Test/Maps.txt");
+		File input = new File("file/Maps.txt");
         ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(input));
         arrayList = (ArrayList<Matrix>) objectInputStream.readObject();
         objectInputStream.close();

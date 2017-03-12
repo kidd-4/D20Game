@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
-import characters.Matrix;
+import objects.Matrix;
 /**
  * SaveMap class is used to save the maps to the file
  * @author grey
@@ -21,7 +21,7 @@ public class SaveMap {
 	// 在保存地图时调用，将创建好的Cells二位数组保存在mapName文件中
 	public void saveMap(ArrayList<Matrix> allMaps) throws IOException{
 		
-		File output = new File("/Users/grey/Desktop/Test/Maps.txt");
+		File output = new File("file/Maps.txt");
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(output));
         objectOutputStream.writeObject(allMaps);
         objectOutputStream.flush();

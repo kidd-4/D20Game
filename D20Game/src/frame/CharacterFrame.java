@@ -1,4 +1,4 @@
-package map;
+package frame;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -17,11 +17,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import characters.Characters;
-import characters.Items;
 import enumclass.Orientation;
 import load.LoadCharacter;
 import load.LoadItem;
+import objects.Characters;
+import objects.Items;
 import save.SaveCharacter;
 /**
  * CharacterFrame is used to create a new character or edit a character
