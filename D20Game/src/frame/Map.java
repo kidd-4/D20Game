@@ -32,7 +32,7 @@ import objects.Characters;
 import objects.Ground;
 import objects.Items;
 import objects.Matrix;
-import save.SaveCharacter;
+import observer.CharacterObserver;
 
 /**
  * 
@@ -53,7 +53,7 @@ public class Map {
 	public Cells[][] map;// the 2 dimensions Cells array
 	public ArrayList<Items> itemArrayList = new ArrayList<Items>();
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
-	public ArrayList<Items> backpack = new ArrayList<Items>();
+	
 	public ArrayList<Matrix> allMaps = new ArrayList<Matrix>();
 	public ArrayList<Campaigns> campaigns = new ArrayList<Campaigns>();
 
@@ -61,8 +61,7 @@ public class Map {
 	public String title;
 	public JFrame jFrame;
 	public JButton jButton;
-	public JButton equip = new JButton("Equip item");
-	public JButton showInformation = new JButton("Show Information");
+	public JButton inventoryInformation = new JButton("Inventory Information");
 	public JPanel panel = new JPanel();
 	public JPanel panelContainer = new JPanel(); // contain the panel which contains the map
 	public JPanel showPanel = new JPanel(); //contain the item and character combo box 
@@ -76,8 +75,6 @@ public class Map {
 	public JLabel mapBoxLabel =  new JLabel("Created Maps");
 	public JComboBox<String> campaignBox = new JComboBox<String>();// show created character in the file
 	public JLabel campaignBoxLabel =  new JLabel("Created Campaigns");
-	public JComboBox<String> backpackBox= new JComboBox<String>();// show backpack of Player
-	public JLabel backpackBoxLabel =  new JLabel("Backpack of Player");
 	
 	public JMenuBar jMenuBar = new JMenuBar();
 	public JMenu jMenu = new JMenu("Menu");
@@ -211,7 +208,6 @@ public class Map {
 		
 		drawItemBox(); //show items in the file
 		drawcharacterBox();// show characters in the file
-		drawBackpackBox();
 		drawInformation();
 		drawMapBox();
 		drawCampaignBox();
@@ -305,25 +301,10 @@ public class Map {
 		
 		}
 	}
+
 	
-	/**
-	 * show the backpack of Player
-	 */
 	
-	public void drawBackpackBox() {
-		backpackBox.removeAllItems(); // remove original item list
-		
-		try {
-			backpack = new LoadCharacter().readBackpack(characterArrayList); // get the item list from file
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		for(Items items:backpack)
-		{
-			backpackBox.addItem(items.getName());
-		}
-	}
+
 	
 	/**
 	 * show the created campaigns
@@ -416,155 +397,37 @@ public class Map {
 
 		 drawMap(1); //initialize map the first
 		 
+		 CharacterObserver characterObserver = new CharacterObserver(Map.this);
+		 
+			characterBox.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					characterObserver.start();
+				}
+			});;
+			
+		 
 		 //显示下拉框选中的人物的信息
 		 // show the information of selected character
-		 showInformation.addActionListener(new ActionListener() {
+		inventoryInformation.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				drawInformation();
+				Characters character = null;
+				try {
+					character = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(), characterArrayList);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				new InventoryFrame(Map.this, jFrame,characterArrayList,character);
+				jFrame.setEnabled(false);
 			}
 		});
 		 
-		 //把backpack中的装备换到inventory中，并改变人物的属性
-		 // equip selected item in the backpack to the inventory
-		 equip.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				String backpackString = backpackBox.getSelectedItem().toString();
-				String invetoryString = null;
-				
-				//eliminate number using regular expression
-				String[] strings = backpackString.split("\\d");//正则表达式去除数字
-				
-				int backpackValue = 0;
-				int inventoryValue = 0;
-				Characters oldCharacter = null;
-				try {
-					
-					//必须是玩家的名字
-					// it must be the Player's name
-					if(characterBox.getSelectedItem().toString().startsWith("P")||characterBox.getSelectedItem().toString().startsWith("p"))
-						oldCharacter = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
-					else
-						JOptionPane.showMessageDialog(null, "Please choose a player", "Alert", JOptionPane.ERROR_MESSAGE);
-						
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				if(oldCharacter != null){
-				
-				// 获得backpack物品的value
-				// get value of selected item in the backpack
-				for(Items backpack: oldCharacter.getBackpack()){
-					if(backpack.getName().equals(backpackString)){
-						backpackValue = backpack.getValue();
-					}
-				}
-				
-				// 在inventory中寻找和backpack中对应的物品，如果有，则返回对应物品，如果无，就返回空
-				/* search corresponding item in the inventory with the same type of selected one.
-				 * if exsit, return the item. if not, return empty
-				*/
-				for(Items inventory :oldCharacter.getInventory()){
-					
-					String[] strings2 = inventory.getName().split("\\d");
-					if(strings2[0].equalsIgnoreCase(strings[0])){
-						invetoryString = inventory.getName();
-						inventoryValue = inventory.getValue();
-						break;
-					}
-					else{
-						invetoryString = "EMPTY";
-						inventoryValue = 0;
-					}
-				}
-				
-				//将backpack中的物品换成inventory中的物品
-				// change the the item in the backpack to the item of inventory
-				for(Items backpack:oldCharacter.getBackpack()){
-					//如果有两个相同名字的物品，则会出问题 break可以解决问题
-					if(backpack.getName().equals(backpackString)){
-						backpack.setName(invetoryString);
-						backpack.setValue(inventoryValue);
-						break;
-					}
-				}
-				
-				//将inventory中的物品换成backpack中的物品，并修改对应的属性
-				// change the item in the inventory to the item of backpack and change the attribute of player
-				if(strings[0].equalsIgnoreCase("WEAPON")){
-					oldCharacter.getInventory().get(0).setName(backpackString);
-					oldCharacter.getInventory().get(0).setValue(backpackValue);
-					int value = oldCharacter.getDamageBonus();
-					oldCharacter.setDamageBonus(value+backpackValue-inventoryValue);
-				}
-				else if(strings[0].equalsIgnoreCase("SHIELD")){
-					oldCharacter.getInventory().get(1).setName(backpackString);
-					oldCharacter.getInventory().get(1).setValue(backpackValue);
-					int value = oldCharacter.getArmorClass();
-					oldCharacter.setArmorClass(value+backpackValue-inventoryValue);
-				}
-				else if(strings[0].equalsIgnoreCase("HELMET")){
-					oldCharacter.getInventory().get(2).setName(backpackString);
-					oldCharacter.getInventory().get(2).setValue(backpackValue);
-					int value = oldCharacter.getIntelligence();
-					oldCharacter.setIntelligence(value+backpackValue-inventoryValue);
-				}
-				else if(strings[0].equalsIgnoreCase("ARMOR")){
-					oldCharacter.getInventory().get(3).setName(backpackString);
-					oldCharacter.getInventory().get(3).setValue(backpackValue);
-					int value = oldCharacter.getArmorClass();
-					oldCharacter.setArmorClass(value+backpackValue-inventoryValue);
-				}
-				else if(strings[0].equalsIgnoreCase("RING")){
-					oldCharacter.getInventory().get(4).setName(backpackString);
-					oldCharacter.getInventory().get(4).setValue(backpackValue);
-					int value = oldCharacter.getWisdom();
-					oldCharacter.setWisdom(value+backpackValue-inventoryValue);
-				}
-				else if(strings[0].equalsIgnoreCase("BELT")){
-					oldCharacter.getInventory().get(5).setName(backpackString);
-					oldCharacter.getInventory().get(5).setValue(backpackValue);
-					int value = oldCharacter.getStrength();
-					oldCharacter.setStrength(value+backpackValue-inventoryValue);
-				}
-				else{
-					oldCharacter.getInventory().get(6).setName(backpackString);
-					oldCharacter.getInventory().get(6).setValue(backpackValue);
-					int value = oldCharacter.getDexterity();
-					oldCharacter.setDexterity(value+backpackValue-inventoryValue);
-				}
-				
-				//删除原有的player之后再保存现在的
-				// delete original player and save the edited one
-				for(Characters characters: characterArrayList){
-					if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
-						characterArrayList.remove(characters);
-						break;
-					}
-				}
-				
-				characterArrayList.add(oldCharacter);
-				
-				try {
-					new SaveCharacter().saveCharacter(characterArrayList);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				}
-				
-				drawBackpackBox();
-				drawInformation();
-				
-				
-			}
-		});
+		 
 		 
 		 //open the CampaignFrame
 		 jMenuCampaign.addActionListener(new ActionListener() {
@@ -689,10 +552,7 @@ public class Map {
 		showPanel.add(mapBox);
 		showPanel.add(campaignBoxLabel);
 		showPanel.add(campaignBox);
-		showPanel.add(backpackBoxLabel);
-		showPanel.add(backpackBox);
-		showPanel.add(equip);
-		showPanel.add(showInformation);
+		showPanel.add(inventoryInformation);
 		characterPanel.setLayout(new FlowLayout(0, 30, 30));//0向左对齐，30代表左右间距，30代表上下间距
 		characterPanel.add(name);
 		characterPanel.add(namevValue);

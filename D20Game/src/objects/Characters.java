@@ -16,7 +16,7 @@ public class Characters implements Serializable {
 	public String name;
 
 	public int level;
-	public int hitpoints; // hitpoints = 10*level + constitution
+	public int hitpoints; // hitpoints = 4D6*level + modCon
 	public int movement;
 
 	public int strength;
@@ -28,7 +28,7 @@ public class Characters implements Serializable {
 
 	
 	
-	public int armorClass; // armorClass = modDex+armor+shield
+	public int armorClass; // armorClass = modDex + armor + shield
 	public int attackBonus; //attackBonus = level + modStr
 	public int damageBonus;//damageBonus = modStr + weapon
 

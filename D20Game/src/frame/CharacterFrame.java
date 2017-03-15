@@ -371,11 +371,12 @@ public class CharacterFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+			
 			intelligence.setText(String.valueOf(Integer.parseInt(intelligence.getText())+Integer.parseInt(helmet.getText())));
 			strength.setText(String.valueOf(Integer.parseInt(strength.getText())+Integer.parseInt(belt.getText())));
 			wisdom.setText(String.valueOf(Integer.parseInt(wisdom.getText())+Integer.parseInt(ring.getText())));
 			dexterity.setText(String.valueOf(Integer.parseInt(dexterity.getText())+Integer.parseInt(boot.getText())));
-			hitpoints.setText(String.valueOf(Integer.parseInt(level.getText())*10+Integer.parseInt(constitution.getText())));
+			hitpoints.setText(String.valueOf(Integer.parseInt(level.getText())*getValues()+Integer.parseInt(modCon.getText())));
 			armorClass.setText(String.valueOf(Integer.parseInt(modDex.getText())+Integer.parseInt(armor.getText())+Integer.parseInt(shield.getText())));
 			attackBonus.setText(String.valueOf(Integer.parseInt(level.getText())+Integer.parseInt(modStr.getText())));
 			damageBonus.setText(String.valueOf(Integer.parseInt(modStr.getText())+Integer.parseInt(weapon.getText())));
@@ -448,16 +449,32 @@ public class CharacterFrame {
 			newItemArrayList.add(new Items(beltName.getText(), Integer.parseInt(belt.getText())));
 			newItemArrayList.add(new Items(bootName.getText(), Integer.parseInt(boot.getText())));
 			
-			backpack.add(new Items("WEAPON2", 2));
-			backpack.add(new Items("BOOT2", 2));
-			backpack.add(new Items("BELT2", 2));
-			backpack.add(new Items("RING2", 2));
-			backpack.add(new Items("EMPTY", 0));
-			backpack.add(new Items("EMPTY", 0));
-			backpack.add(new Items("EMPTY", 0));
-			backpack.add(new Items("EMPTY", 0));
-			backpack.add(new Items("EMPTY", 0));
-			backpack.add(new Items("EMPTY", 0));
+			//编辑character时，会使backpack恢复默认值
+			if(name.getText().startsWith("P")||name.getText().startsWith("p"))
+			{
+				backpack.add(new Items("WEAPON2", 2));
+				backpack.add(new Items("BOOT2", 2));
+				backpack.add(new Items("BELT2", 2));
+				backpack.add(new Items("RING2", 2));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+			}
+			else{
+				backpack.add(new Items("SHIELD2", 2));
+				backpack.add(new Items("HELMET2", 2));
+				backpack.add(new Items("ARMOR2", 2));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+				backpack.add(new Items("EMPTY", 0));
+			}
 			
 			
 
@@ -476,11 +493,17 @@ public class CharacterFrame {
 					Integer.parseInt(charisma.getText()),Integer.parseInt(modCha.getText()),Enum.valueOf(Orientation.class, orient.getText()),
 					Integer.parseInt(armorClass.getText()),Integer.parseInt(attackBonus.getText()),Integer.parseInt(damageBonus.getText()),newItemArrayList,backpack);
 			
+			
+			
 			if(oldcharacters == null)
 				characterArrayList.add(characters);
 			else {
-				characterArrayList.remove(oldcharacters);
-				characterArrayList.add(characters);
+				//替代原有的character
+				int index = characterArrayList.indexOf(oldcharacters);
+				characterArrayList.set(index,characters);
+				
+//				characterArrayList.remove(oldcharacters);
+//				characterArrayList.add(characters);
 				
 			}
 			
@@ -494,7 +517,6 @@ public class CharacterFrame {
 
 			
 			map.drawcharacterBox();
-			map.drawBackpackBox();
 			map.drawInformation();
 			
 				jFrame2.setEnabled(true);
@@ -512,35 +534,42 @@ public class CharacterFrame {
 			public void actionPerformed(ActionEvent e) {
 				int values = getValues();
 				strength.setText(String.valueOf(values));
+				modStr.setText(String.valueOf(values/3));
 				values = getValues();
 				dexterity.setText(String.valueOf(values));
+				modDex.setText(String.valueOf(values/3));
 				values = getValues();
 				wisdom.setText(String.valueOf(values));
+				modWis.setText(String.valueOf(values/3));
 				values = getValues();
 				constitution.setText(String.valueOf(values));
+				modCon.setText(String.valueOf(values/3));
 				values = getValues();
 				intelligence.setText(String.valueOf(values));
+				modInt.setText(String.valueOf(values/3));
 				values = getValues();
 				charisma.setText(String.valueOf(values));
+				modCha.setText(String.valueOf(values/3));
 			}
 
-			private int getValues() {
-				Random random = new Random();
-				int[] array = new int[4];
-				
-				for (int i = 0; i < 4; i++) {
-					array[i] = random.nextInt(6)+1;
-
-				}
-				Arrays.sort(array);
-				
-				return array[1]+array[2]+array[3];				
-			}
+			
 		});
+		
 
 		
 	}
 
+	public int getValues() {
+		Random random = new Random();
+		int[] array = new int[4];
+		
+		for (int i = 0; i < 4; i++) {
+			array[i] = random.nextInt(6)+1;
 
+		}
+		Arrays.sort(array);
+		
+		return array[1]+array[2]+array[3];				
+	}
 
 }

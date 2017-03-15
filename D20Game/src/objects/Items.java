@@ -14,6 +14,7 @@ public class Items implements Serializable {
 
 	    public String name;
 	    public int value;
+	    
 /**
  * constructor method
  * @param name name

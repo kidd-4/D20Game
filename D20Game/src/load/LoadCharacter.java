@@ -77,14 +77,15 @@ public class LoadCharacter {
 	/**
 	 * display all the items in the backpack of Player
 	 * @param characterArrayList
+	 * @param character 
 	 * @return ArrayList<Items>
 	 * @throws IOException
 	 */
 	//显示主界面的backpack items
-	public ArrayList<Items> readBackpack(ArrayList<Characters> characterArrayList) throws IOException{
+	public ArrayList<Items> readBackpack(ArrayList<Characters> characterArrayList, Characters character) throws IOException{
 		
 		for(Characters characters: characterArrayList){
-			if(characters.getName().startsWith("P")||characters.getName().startsWith("p")){
+			if(characters.equals(character)){
 				backpack = characters.getBackpack();
 				break;
 			}
