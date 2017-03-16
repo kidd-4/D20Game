@@ -22,7 +22,7 @@ import save.SaveCharacter;
 
 public class InventoryFrame {
 	public JComboBox<String> backpackBox= new JComboBox<String>();// show backpack of Player
-	public JLabel backpackBoxLabel =  new JLabel("Backpack of Player");
+	public JLabel backpackBoxLabel =  new JLabel("Backpack");
 	public JButton equip = new JButton("Equip item");
 	public ArrayList<Items> backpack = new ArrayList<Items>();
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();

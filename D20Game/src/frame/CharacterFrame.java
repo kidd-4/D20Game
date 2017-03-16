@@ -17,6 +17,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import build.BullyBuilder;
+import build.Director;
+import build.FighterBulider;
+import build.NimbleBuilder;
+import build.Scores;
+import build.TankBuilder;
 import enumclass.Orientation;
 import load.LoadCharacter;
 import load.LoadItem;
@@ -88,6 +94,7 @@ public class CharacterFrame {
 		JButton Modify = new JButton("Modify");
 		JButton loadItem = new JButton("Load an item");
 		JComboBox<String> jComboBox = new JComboBox<String>();
+		JComboBox<String> fighter = new JComboBox<String>();
 		JLabel nameLabel = new JLabel("Name");
 		JLabel levelLabel = new JLabel("Level");
 		JLabel hitpointsLabel = new JLabel("Hitpoint");
@@ -287,6 +294,7 @@ public class CharacterFrame {
 		jFrame.add(loadItem);
 		jFrame.add(jComboBox);
 		jFrame.add(roll);
+		jFrame.add(fighter);
 		jFrame.add(Modify);
 		jFrame.add(save);
 		jFrame.add(load);
@@ -295,6 +303,10 @@ public class CharacterFrame {
 		// display all the items which are created
 		for(Items items : itemArrayList)
 			jComboBox.addItem(items.getName());
+		
+		fighter.addItem("Bully");
+		fighter.addItem("Nimble");
+		fighter.addItem("Tank");
 			
 		
 		jFrame.setLocationRelativeTo(null);//put the screen in the center
@@ -306,6 +318,62 @@ public class CharacterFrame {
 				jFrame2.setEnabled(true);
 			}
 		});
+		
+		//According to different kind of fighter, change the ability scores
+		fighter.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Director director;
+				Scores scores;
+				ArrayList< String> arrayList = new ArrayList<>();
+				arrayList.add(strength.getText());
+				arrayList.add(constitution.getText());
+				arrayList.add(dexterity.getText());
+				arrayList.add(intelligence.getText());
+				arrayList.add(charisma.getText());
+				arrayList.add(wisdom.getText());
+				
+				FighterBulider bully = new BullyBuilder();
+				FighterBulider nimble = new NimbleBuilder();
+				FighterBulider tank = new TankBuilder();
+				
+				director = new Director();
+				
+				if(fighter.getSelectedItem().toString().equals("Bully")){
+					director.setBuilder(bully);
+					director.constructScores(arrayList);
+					scores = director.getScores();
+				}
+				else if(fighter.getSelectedItem().toString().equals("Nimble")){
+					director.setBuilder(nimble);
+					director.constructScores(arrayList);
+					scores = director.getScores();
+				}
+				else{
+					director.setBuilder(tank);
+					director.constructScores(arrayList);
+					scores = director.getScores();
+				}
+				
+				strength.setText(String.valueOf(scores.getStrength()));
+				constitution.setText(String.valueOf(scores.getConstitution()));
+				dexterity.setText(String.valueOf(scores.getDexterity()));
+				intelligence.setText(String.valueOf(scores.getIntelligence()));
+				charisma.setText(String.valueOf(scores.getCharisma()));
+				wisdom.setText(String.valueOf(scores.getWisdom()));
+				
+				modStr.setText(String.valueOf(Integer.parseInt(strength.getText())/3));
+				modDex.setText(String.valueOf(Integer.parseInt(dexterity.getText())/3));
+				modWis.setText(String.valueOf(Integer.parseInt(wisdom.getText())/3));
+				modCon.setText(String.valueOf(Integer.parseInt(constitution.getText())/3));
+				modInt.setText(String.valueOf(Integer.parseInt(intelligence.getText())/3));
+				modCha.setText(String.valueOf(Integer.parseInt(charisma.getText())/3));
+				
+				
+			}
+		});
+		
 		// load an existed character 
 		load.addActionListener(new ActionListener() {
 			
@@ -534,22 +602,22 @@ public class CharacterFrame {
 			public void actionPerformed(ActionEvent e) {
 				int values = getValues();
 				strength.setText(String.valueOf(values));
-				modStr.setText(String.valueOf(values/3));
+//				modStr.setText(String.valueOf(values/3));
 				values = getValues();
 				dexterity.setText(String.valueOf(values));
-				modDex.setText(String.valueOf(values/3));
+//				modDex.setText(String.valueOf(values/3));
 				values = getValues();
 				wisdom.setText(String.valueOf(values));
-				modWis.setText(String.valueOf(values/3));
+//				modWis.setText(String.valueOf(values/3));
 				values = getValues();
 				constitution.setText(String.valueOf(values));
-				modCon.setText(String.valueOf(values/3));
+//				modCon.setText(String.valueOf(values/3));
 				values = getValues();
 				intelligence.setText(String.valueOf(values));
-				modInt.setText(String.valueOf(values/3));
+//				modInt.setText(String.valueOf(values/3));
 				values = getValues();
 				charisma.setText(String.valueOf(values));
-				modCha.setText(String.valueOf(values/3));
+//				modCha.setText(String.valueOf(values/3));
 			}
 
 			
