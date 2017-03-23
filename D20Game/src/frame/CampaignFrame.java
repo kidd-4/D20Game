@@ -23,13 +23,16 @@ import save.SaveCampaign;
 /**
  * CampaignFrame is used to create a new campaign or edit a campaign
  * @author grey
- *@version 1.0
+ *@version 2.0
  */
 public class CampaignFrame {
 	public JTextField campaignName = new JTextField();
 	public ArrayList<Matrix> showMaps = new ArrayList<>();
 	public ArrayList<Matrix> campaign = new ArrayList<>();
 	public Campaigns editCampaigns = null;
+	
+	JComboBox<String> ownMaps = new JComboBox<String>();
+	JComboBox<String> jComboBox = new JComboBox<String>();
 	/**
 	 * constructor method, when the CampaignFrame is called,  it will invoke 
 	 * @param map
@@ -44,8 +47,8 @@ public class CampaignFrame {
 		JButton loadCampaign = new JButton("Load a campaign");
 		JButton remove = new JButton("Remove");
 		JLabel campaignLabel = new JLabel("Campaign name");
-		JComboBox<String> jComboBox = new JComboBox<String>();
-		JComboBox<String> ownMaps = new JComboBox<String>();
+		
+		
 
 		
 		campaignName.setSize(new Dimension(100, 30));
@@ -62,14 +65,14 @@ public class CampaignFrame {
 		jFrame.add(ownMaps);
 		jFrame.add(remove);
 		
-	    try {
-	    	showMaps =	new LoadMap().readMap();
-		} catch (ClassNotFoundException | IOException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+//	    try {
+//	    	showMaps =	new LoadMap().readMap();
+//		} catch (ClassNotFoundException | IOException e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
 	    
-	    for(Matrix matrix: showMaps){
+	    for(Matrix matrix: allMaps){
 	    	jComboBox.addItem(matrix.getName());
 	    }
 		
@@ -89,17 +92,11 @@ public class CampaignFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				ownMaps.removeAllItems();
 				
-				editCampaigns = new LoadCampaign().loadCampaign(campaignArraylist, campaignName.getText());
-				
-				if(editCampaigns == null)
-					JOptionPane.showMessageDialog(null, "There is no such a campaign", "Alert", JOptionPane.ERROR_MESSAGE);
-				else
-					for(Matrix matrix: editCampaigns.getCampaign()){
-					ownMaps.addItem(matrix.getName());
-				}
+				boolean flag = loadCampaign(campaignArraylist);
+				System.out.println(flag);
 			}
+
 		});
 		
 		//将显示出来的maps中，不需要的去除
@@ -109,12 +106,9 @@ public class CampaignFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				for(Matrix matrix: editCampaigns.getCampaign()){
-					if(matrix.getName().equals(ownMaps.getSelectedItem().toString())){
-						editCampaigns.getCampaign().remove(matrix);
-						break;
-					}
-				}
+				boolean flag = remove();
+				System.out.println(flag);
+				
 				//去除相应地图之后，在界面显示出来
 				// display the map in the campaign again
 				ownMaps.removeAllItems();
@@ -132,21 +126,8 @@ public class CampaignFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				Matrix matrix = null;
-				
-				try {
-					matrix = new LoadMap().loadMap2(allMaps, jComboBox.getSelectedItem().toString());
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				//如果输入的campaign名字已存在(edit)，则添加map。否则新建campaign(create)，加入map
-				//if the name you input has already exited, then add map. if not, create a new campaign, add the map
-				if(editCampaigns!=null)
-					editCampaigns.getCampaign().add(matrix);//这里editCampaign 在开始时为空
-				else
-					campaign.add(matrix);
-					
+				boolean flag = loadMap(allMaps);
+				System.out.println(flag);
 				
 			}
 		});
@@ -158,25 +139,8 @@ public class CampaignFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				Campaigns oldCampaign = new LoadCampaign().loadCampaign(campaignArraylist, campaignName.getText());
-				//如果原来没有这个名字的campaign，则加入新的campaign。如果原来有，删除原来的，添加现在的
-				//if oldCampaign exit,delete original campaign and add new campaign. if not, just add new campaign
-				if(oldCampaign == null)//create
-				{
-				editCampaigns = new Campaigns(campaign, campaignName.getText());
-				campaignArraylist.add(editCampaigns);
-				}
-				else{//edit
-					campaignArraylist.remove(oldCampaign);
-					campaignArraylist.add(editCampaigns);
-				}
-				
-				try {
-					new SaveCampaign().saveCampaign(campaignArraylist);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+				boolean flag = save(campaignArraylist);
+				System.err.println(flag);
 				
 				//在主界面显示campaigns  drawCampaigns();
 				// display the campaigns in the main frame
@@ -185,9 +149,102 @@ public class CampaignFrame {
 				jFrame2.setEnabled(true);
 				jFrame.dispose();
 				
-				
 			}
 		});
 	}
+	/**
+	 * save the campaign Arraylist to files
+	 * @param campaignArraylist   campaign Arraylist
+	 * @return if the campaign is edited and saved then it is true; otherwise it is false
+	 */
+	public boolean save(ArrayList<Campaigns> campaignArraylist) {
+		boolean flag = false;
+		//如果原来没有这个名字的campaign，则加入新的campaign。如果原来有，删除原来的，添加现在的
+		//if oldCampaign exit,delete original campaign and add new campaign. if not, just add new campaign
+		if(editCampaigns == null)//create
+		{
+			editCampaigns = new Campaigns(campaign, campaignName.getText());
+			campaignArraylist.add(editCampaigns);
+		}
+		else{//edit
+			int index = campaignArraylist.indexOf(editCampaigns);
+			campaignArraylist.set(index,editCampaigns);
+			flag = true;
+		}
+		
+		try {
+			new SaveCampaign().saveCampaign(campaignArraylist);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return flag;
+	}
+	
+	/**
+	 * load specific map in the arraylist to the campaign frame
+	 * @param allMaps  the arraylist that contains all maps
+	 * @return if the campaign does not exist, then it is true; otherwise it is false
+	 */
+	public boolean loadMap(ArrayList<Matrix> allMaps) {
+		boolean flag = false;
+		Matrix matrix = null;
+		
+		try {
+			matrix = new LoadMap().loadMap2(allMaps, jComboBox.getSelectedItem().toString());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		//如果输入的campaign名字已存在(edit)，则添加map。否则新建campaign(create)，加入map
+		//if the name you input has already exited, then add map. if not, create a new campaign, add the map
+		if(editCampaigns!=null)
+			editCampaigns.getCampaign().add(matrix);//这里editCampaign 在开始时为空
+		else{
+			campaign.add(matrix);
+			flag = true;
+		}
+		return flag;
+	}
+	/**
+	 * remove the map that is selected
+	 * @return if the map exist, then it is true; otherwise it is false
+	 */
+	public boolean remove() {
+		boolean flag = false;
+		
+		for(Matrix matrix: editCampaigns.getCampaign()){
+			if(matrix.getName().equals(ownMaps.getSelectedItem().toString())){
+				editCampaigns.getCampaign().remove(matrix);
+				flag = true;
+				break;
+			}
+		}
+		
+		return flag;
+	}
+	
+	/**
+	 * load the campaign that you select
+	 * @param campaignArraylist the arraylist that contains all the campaigns
+	 * @return  if the campaign that you select exist, then it is true; otherwise it is false
+	 */
+	public boolean loadCampaign(ArrayList<Campaigns> campaignArraylist) {
+		boolean flag = false;
+		ownMaps.removeAllItems();
+		
+		editCampaigns = new LoadCampaign().loadCampaign(campaignArraylist, campaignName.getText());
+		
+		if(editCampaigns == null)
+			JOptionPane.showMessageDialog(null, "There is no such a campaign", "Alert", JOptionPane.ERROR_MESSAGE);
+		else{
+			for(Matrix matrix: editCampaigns.getCampaign()){
+			ownMaps.addItem(matrix.getName());
+		}
+			flag = true;
+		}
+		return flag;
+	}
+	
 
 }

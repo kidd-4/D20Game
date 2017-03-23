@@ -22,7 +22,7 @@ import save.SaveItem;
 /**
  * ItemFrame is used to create a new Item or edit a Item
  * @author grey
- * @version 1.0
+ * @version 2.0
  */
 public class ItemFrame {
 
@@ -204,6 +204,7 @@ public class ItemFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
 				if(jComboBox.getSelectedItem().toString().equals("Helmet"))
 					cardLayout.show(main, "Helmet");
 				else if(jComboBox.getSelectedItem().toString().equals("Ring"))

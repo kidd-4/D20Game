@@ -5,9 +5,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
@@ -20,6 +20,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import actionListener.PanelListener;
 import actionListener.MapListener;
 import enumclass.TileType;
 import load.LoadCampaign;
@@ -33,6 +34,7 @@ import objects.Ground;
 import objects.Items;
 import objects.Matrix;
 import observer.CharacterObserver;
+import play.Adaptor;
 
 /**
  * 
@@ -40,9 +42,10 @@ import observer.CharacterObserver;
  * When the map was changed, the map will be repainted.
  * When player create or edit a map, character, item or campaign, then show the information on the panel
  *
- * @author grey
- * @version 1.0
- *
+
+ * @author grey,Tann
+ * @version 2.0
+
  */
 
 public class Map {
@@ -53,6 +56,7 @@ public class Map {
 	public Cells[][] map;// the 2 dimensions Cells array
 	public ArrayList<Items> itemArrayList = new ArrayList<Items>();
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
+	public ArrayList<Characters> characterMapArrayList = new ArrayList<>();
 	
 	public ArrayList<Matrix> allMaps = new ArrayList<Matrix>();
 	public ArrayList<Campaigns> campaigns = new ArrayList<Campaigns>();
@@ -61,6 +65,7 @@ public class Map {
 	public String title;
 	public JFrame jFrame;
 	public JButton jButton;
+	public JButton startGame = new JButton("Start Game");
 	public JButton inventoryInformation = new JButton("Inventory Information");
 	public JPanel panel = new JPanel();
 	public JPanel panelContainer = new JPanel(); // contain the panel which contains the map
@@ -75,6 +80,8 @@ public class Map {
 	public JLabel mapBoxLabel =  new JLabel("Created Maps");
 	public JComboBox<String> campaignBox = new JComboBox<String>();// show created character in the file
 	public JLabel campaignBoxLabel =  new JLabel("Created Campaigns");
+	public JComboBox<String> characterMapBox = new JComboBox<String>();// show created character in the map
+	public JLabel characterMapLabel =  new JLabel("Characters in the map");
 	
 	public JMenuBar jMenuBar = new JMenuBar();
 	public JMenu jMenu = new JMenu("Menu");
@@ -126,9 +133,26 @@ public class Map {
 	public JLabel inventory5 = new JLabel("Inventory5");
 	public JLabel inventory6 = new JLabel("Inventory6");
 	public JLabel inventory7 = new JLabel("Inventory7");
+
+	/*playing game*/
+	public Characters playingHero;
+	public Campaigns playingCampaign;
+	public int numberMap; //record the maps num of selected campaign
+	public int playingIndex; //recoed the index of map the player is playing,start with 0
 	
+	public ActionListener actionListener;
+	public KeyListener keyListener ;
+
 	/**
-	 *  get map method
+	 * The getter to get the playing index
+	 * @return the index of playing map in the campaign
+	 */
+	public int getPlayingIndex(){
+		return playingIndex;
+	}
+
+	/**
+	 * get map method
 	 * @return  2 dimension Cells array
 	 */
 	public Cells[][] getMap() {
@@ -175,13 +199,20 @@ public class Map {
 	public void setNumCols(int numCols) {
 		this.numCols = numCols;
 	}
+
 	/**
-	 *  initialize the map
+	 * The setter to set the index of playing map in the campaign
+	 */
+	public void setPlayingIndex(int playingIndex) {
+		this.playingIndex = playingIndex;
+	}
+
+	/**
+	 * initialize the map
 	 * @param title 	name of frame
 	 * @param width		width of frame
 	 * @param height	height of frame
 	 */
-
 	public Map(String title, int width, int height) {
 		this.width = width;
 		this.height = height;
@@ -195,8 +226,6 @@ public class Map {
 	 * This method is used to draw the map in a panel according to different rows and columns.
 	 * @param k  k=1 create the new map, k=2 load an existed map
 	 */
-	
-	//根据地图的行和列，以及其中的对象来画地图
 	public void drawMap(int k) {
 
 		panel.setBounds(0, 0, numCols * 33,numRows * 33);// rows represents height, cols represents width
@@ -208,7 +237,7 @@ public class Map {
 		
 		drawItemBox(); //show items in the file
 		drawcharacterBox();// show characters in the file
-		drawInformation();
+//		drawInformation();
 		drawMapBox();
 		drawCampaignBox();
 		
@@ -219,30 +248,41 @@ public class Map {
 			for (int cols = 0; cols < numCols; cols++) {
 			map[rows][cols] = new Cells(TileType.GROUND,numRows,numCols,new Ground(TileType.GROUND));
 					
-				}
+			}
 		}
 		
 		
 		if(k==2)
 			panel.removeAll();
+//		if(k==3){
+//			panel.removeAll();
+//			panelContainer.removeAll();
+//			panelContainer.requestFocus();
+////			panel.updateUI();
+////			panelContainer.updateUI();
+//			System.out.println("333 "+playingIndex);
+//			System.out.println("333 "+numRows);
+//			System.out.println("333 "+numCols);
+//		}
+
 
 		for (int i = 0; i < numRows; i++)
 			for (int j = 0; j < numCols; j++) {
 				// draw the map according to different kind of TileType
 				if (map[i][j].getTileType() == TileType.GROUND)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Ground.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Ground.png"));
 				else if (map[i][j].getTileType() == TileType.WALL) 
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Wall.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Wall.png"));
 				 else if (map[i][j].getTileType() == TileType.CHEST)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Chest.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Chest.png"));
 				else if (map[i][j].getTileType() == TileType.HERO)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Hero.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Hero.png"));
 				else if (map[i][j].getTileType() == TileType.MONSTER)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Monster.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Monster.png"));
 				else if (map[i][j].getTileType() == TileType.EXIT)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Exit.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Exit.jpg"));
 				else if (map[i][j].getTileType() == TileType.ENTRY)
-					jButton = new JButton("", new ImageIcon(Image.class.getResource("/textures/Entry.png")));
+					jButton = new JButton("", new ImageIcon("res/textures/Entry.jpg"));
 				
 				jButton.putClientProperty("Rows", i);// set a attribute for every button
 				jButton.putClientProperty("Cols", j);
@@ -263,19 +303,23 @@ public class Map {
 	 */
 	public void drawInformation(){
 		Characters characters = null;
-		try {
-			//读取characters
-			/* when the character box in the main frame was selected, 
-			 * then we get corresponding character object from the file
-			 */
-			if(characterBox.getSelectedItem() !=null)//如果下拉框不为空
-			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		//读取characters
+		/* when the character box in the main frame was selected, 
+		 * then we get corresponding character object from the file
+		 */
+//		try {
+//			if(characterMapBox.getSelectedItem() !=null)
+//			characters = new LoadCharacter().loadcharacter(characterMapBox.getSelectedItem().toString(),characterArrayList);
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
 		
-		//如果人物不为空
+		characters = getCharacterMap();
+		
+		
+		
+
 		if(characters!=null){
 			namevValue.setText(characters.getName());
 			levelValue.setText(String.valueOf(characters.getLevel()));
@@ -302,10 +346,7 @@ public class Map {
 		}
 	}
 
-	
-	
 
-	
 	/**
 	 * show the created campaigns
 	 */
@@ -346,7 +387,7 @@ public class Map {
 	/**
 	 * show created characters in the character box
 	 */
-	//在面板上显示人物列表
+	//show the characters list in jcombobox
 	public void drawcharacterBox() {
 		characterBox.removeAllItems(); // remove original character list
 		try {
@@ -369,7 +410,7 @@ public class Map {
 	/**
 	 * show created items in the item box
 	 */
-	//在面板上显示物品列表
+	//show items list in  jcombobox
 	public void drawItemBox(){
 			itemBox.removeAllItems();// remove original item list
 		
@@ -390,6 +431,7 @@ public class Map {
 	 * initialize whole frame and add listener for every menu items
 	 */
 	//初始化整个frame，并对菜单项添加相应的监听
+	//initialize the frame and add action listener
 	public void init() {
 
 		jFrame = new JFrame(title);
@@ -397,15 +439,47 @@ public class Map {
 
 		 drawMap(1); //initialize map the first
 		 
+		
+		 
+		 startGame.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//initialization
+				playingHero=null;
+				playingCampaign=null;
+//				numberMap=0;
+				playingIndex=0;
+
+				String selectedCharacter=characterBox.getSelectedItem().toString();
+				String selectedCampaign=campaignBox.getSelectedItem().toString();
+
+				try {
+					Map.this.playingHero=new LoadCharacter().loadcharacter(selectedCharacter, characterArrayList);
+					Map.this.playingCampaign=new LoadCampaign().loadCampaign(campaigns,selectedCampaign);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+
+				initCampaign();
+				System.out.println("playingIndex "+playingIndex);
+				System.out.println("numberMap "+numberMap);
+
+			}
+		});
+		 
 		 CharacterObserver characterObserver = new CharacterObserver(Map.this);
 		 
-			characterBox.addActionListener(new ActionListener() {
-				
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					characterObserver.start();
-				}
-			});;
+		  actionListener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				characterObserver.start();
+				panelContainer.requestFocus();
+			}
+		};
+		
+			characterMapBox.addActionListener(actionListener);;
 			
 		 
 		 //显示下拉框选中的人物的信息
@@ -415,15 +489,30 @@ public class Map {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Characters character = null;
-				try {
-					character = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(), characterArrayList);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 				
-				new InventoryFrame(Map.this, jFrame,characterArrayList,character);
+				for(int i=0;i<numRows;i++)
+					for(int j=0;j<numCols;j++){
+						//把所有地图中的人物加到arraylist中去
+						//add all characters on the map into arrayList
+						if(map[i][j].getTileType()==TileType.MONSTER||map[i][j].getTileType()==TileType.HERO)
+						{	
+							characterMapArrayList.add(map[i][j].getCharacters());
+						}
+					}
+				
+				character = getCharacterMap();
+				
+//				try {
+//					character = new LoadCharacter().loadcharacter(characterMapBox.getSelectedItem().toString(), characterArrayList);
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//				}
+				
+				new InventoryFrame(Map.this, jFrame,characterMapArrayList,character);
+				characterMapArrayList.clear();;
 				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
 			}
 		});
 		 
@@ -436,6 +525,7 @@ public class Map {
 			public void actionPerformed(ActionEvent e) {
 				new CampaignFrame(Map.this,jFrame, allMaps,campaigns);
 				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
 			}
 		});
 		 
@@ -444,10 +534,11 @@ public class Map {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				panel.setVisible(true);
 				panel.removeAll();
 				new RowColFrame(Map.this,jFrame); //open RowColFrame
 				jFrame.setEnabled(false);
-
+				panelContainer.requestFocus();
 			}
 		});
 		
@@ -458,6 +549,7 @@ public class Map {
 			public void actionPerformed(ActionEvent e) {
 				new ItemFrame(Map.this,jFrame,itemArrayList);//open ItemFrame
 				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
 			}
 		});
 
@@ -468,6 +560,7 @@ public class Map {
 			public void actionPerformed(ActionEvent e) {
 				new CharacterFrame(Map.this,jFrame,characterArrayList,itemArrayList);//open CharacterFrame
 				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
 			}
 		});
 		
@@ -478,20 +571,12 @@ public class Map {
 				int flagEntry = 0;
 				int flagExit = 0;
 				int flagHero = 0;
-				//遍历整个地图，判断是否有出口，入口和人物
-				// traverse whole map to judge whether there is exit, entry or Hero
-				for(int i=0;i<numRows;i++){
-					for(int j=0;j<numCols;j++){
-						if(map[i][j].getTileType().equals(TileType.ENTRY))
-							flagEntry = 1;
-						 if (map[i][j].getTileType().equals(TileType.EXIT))
-							flagExit = 1;	
-						 if (map[i][j].getTileType().equals(TileType.HERO))
-							flagHero = 1;
-						
-					}
-					
-				}
+				
+				int[] flag = verifyMap(flagEntry,flagExit,flagHero);
+				
+				flagEntry = flag[0];
+				flagExit = flag[1];
+				flagHero = flag[2];
 				
 				if(flagEntry==0)
 					JOptionPane.showMessageDialog(null, "There is no Entry", "Alert", JOptionPane.ERROR_MESSAGE);
@@ -509,15 +594,15 @@ public class Map {
 				
 				
 			}
-			
+
 		});
 		
 		//open the LoadMapFrame
 		loadMap.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
+				panel.setVisible(true);
 				new LoadMapFrame(Map.this,jFrame,allMaps); //open LoadMapFrame
 				jFrame.setEnabled(false);
 				
@@ -537,9 +622,10 @@ public class Map {
 		jMenuBar.add(jMenuHelp);
 		jFrame.setJMenuBar(jMenuBar);
 
-		panel.setBackground(Color.gray);
+		panel.setBackground(Color.GRAY);
+		panelContainer.setBackground(Color.GRAY);
 //		panelShow.setBackground(Color.GREEN);
-		showPanel.setBackground(Color.LIGHT_GRAY);
+		showPanel.setBackground(Color.white);
 		characterPanel.setBackground(Color.white);
 		
 		panelContainer.setLayout(new BorderLayout());
@@ -552,6 +638,9 @@ public class Map {
 		showPanel.add(mapBox);
 		showPanel.add(campaignBoxLabel);
 		showPanel.add(campaignBox);
+		showPanel.add(startGame);
+		showPanel.add(characterMapLabel);
+		showPanel.add(characterMapBox);
 		showPanel.add(inventoryInformation);
 		characterPanel.setLayout(new FlowLayout(0, 30, 30));//0向左对齐，30代表左右间距，30代表上下间距
 		characterPanel.add(name);
@@ -602,32 +691,54 @@ public class Map {
 		jFrame.setVisible(true);
 		jFrame.setLocationRelativeTo(null);// put the screen in the center
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+	}
+	
+	public Characters getCharacterMap() {
+		Characters characters = null;
+		for(int i=0;i<numRows;i++)
+			for(int j=0;j<numCols;j++){
+				//把所有地图中的人物加到arraylist中去
+				//add all characters on the map into arrayList
+				if(map[i][j].getTileType()==TileType.MONSTER||map[i][j].getTileType()==TileType.HERO)
+				{	
+					//获取选中的人物对象
+					//obtain the character object
+					if(map[i][j].getCharacters().getName().equals(characterMapBox.getSelectedItem().toString()))
+						characters = map[i][j].getCharacters();
+				}
+			}
+		return characters;
 	}
 	
 	
-	public boolean influence(int value,int inventory, int backpack){
-		if(value+inventory+backpack != value)
-		return true;
-		else
-		return false;
-	}
 	
-	public boolean equipWeapon(String name){
-		if(name.equalsIgnoreCase("WEAPON"))
-			return true;
-		else
-		return false;
+	/**
+	 *  * The method is used to verify the map
+	 * in the creation of maps, an entry,exit,hero should be existed
+	 * @param flagEntry  number of entry
+	 * @param flagExit	number of exit
+	 * @param flagHero	number of hero
+	 * @return  int array contains 3 numbers
+	 */
+	public int[] verifyMap(int flagEntry, int flagExit, int flagHero) {
 		
+		//遍历整个地图，判断是否有出口，入口和人物
+		// traverse whole map to judge whether there is exit, entry or Hero
+		for(int i=0;i<numRows;i++){
+			for(int j=0;j<numCols;j++){
+				if(map[i][j].getTileType().equals(TileType.ENTRY))
+					flagEntry = 1;
+				 if (map[i][j].getTileType().equals(TileType.EXIT))
+					flagExit = 1;	
+				 if (map[i][j].getTileType().equals(TileType.HERO))
+					flagHero = 1;
+			}
+		}
+		int[] flag = {flagEntry,flagExit,flagHero};
+		return flag;
 	}
 	
-	public boolean equipShield(String name){
-		if(name.equalsIgnoreCase("SHIELD"))
-			return true;
-		else
-		return false;
-		
-	}
+	
 
 	public boolean exitGlobal(Cells[][] map2){
 		for (int i = 0; i < map2.length; i++) {
@@ -667,6 +778,115 @@ public class Map {
 		return false;
 		
 	}
-	
+
+	/**
+	 * The method is to initialize the game
+	 */
+	public void initCampaign(){
+
+		//set
+		Cells[][] newMap = playingCampaign.getCampaign().get(playingIndex).getMap();
+//		System.out.println("enter to map :"+playingCampaign.getCampaign().get(playingIndex).getName());
+		
+		numRows = newMap[0][0].getX();
+		numCols = newMap[0][0].getY();
+		setMap(newMap, numRows, numCols);
+
+		//adapt the items and character,based on the level of hero
+		Adaptor adaptor=new Adaptor(newMap,this.playingHero);
+		adaptor.adapting();
+
+		updateCharacterList();
+
+		numberMap = playingCampaign.getCampaign().size()-1;
+		keyListener = new PanelListener(Map.this,numberMap);
+		panelContainer.addKeyListener(keyListener);
+		panelContainer.requestFocus();
+		//character show on the entry
+		showOnMap();
+		drawMap(2);
+
+	}
+
+	/**
+	 * The method is used to show the hero on the map in the beginning
+	 */
+	public void showOnMap(){
+
+		for(int r=0; r<numRows;r++){
+			for(int c=0; c<numCols;c++){
+				if(this.map[r][c].getTileType()==TileType.ENTRY){
+					//Playing hero 要改变
+					//Playing hero should change
+					this.map[r][c]=new Cells(TileType.HERO,numRows,numCols,this.playingHero);
+				}
+
+				else if(this.map[r][c].getTileType()==TileType.HERO){
+					this.map[r][c]=new Cells(TileType.GROUND,numRows, numCols,new Ground(TileType.GROUND));
+				}
+
+			}
+		}
+
+	}
+
+	/**
+	 * The method is used to change map from exit
+	 */
+	public void changeMap(){
+		this.playingIndex+=1;
+		Cells[][] newMap = playingCampaign.getCampaign().get(playingIndex).getMap();
+		System.out.println("change to"+playingCampaign.getCampaign().get(playingIndex).getName()+"map");
+		numRows = newMap[0][0].getX();
+		numCols = newMap[0][0].getY();
+		setMap(newMap, numRows, numCols);
+		System.out.println("playingIndex- "+playingIndex);
+		System.out.println(""+numRows);
+		System.out.println(""+numCols);
+		//adapt the items and character, based on hero's level
+		Adaptor adaptor=new Adaptor(newMap,this.playingHero);
+		adaptor.adapting();
+		updateCharacterList();
+		drawMap(2);
+	}
+
+	/**
+	 * The method is to update the Jcombobox of character, according to the characters in the map
+	 */
+	public void updateCharacterList(){
+
+		characterMapBox.removeActionListener(actionListener);
+		//在消除所有的选项之前，需要先去除监听，因为选项为空时，监听会有问题
+		//before deleting all items in jcombobox,need to delete the listener firstly
+		characterMapBox.removeAllItems();
+		
+		
+
+		for(int i=0;i<numRows;i++)
+			for(int j=0;j<numCols;j++){
+				if(map[i][j].getTileType() == TileType.MONSTER ||map[i][j].getTileType() == TileType.HERO){
+					characterMapBox.addItem(map[i][j].getCharacters().getName());
+//					System.out.println("character Jcombobox update");
+				}
+			}
+		
+		characterMapBox.addActionListener(actionListener);
+	}
+
+	/**
+	 * The method is to remove the components in the panel to show the main page after playing of a campaign
+	 */
+	//没有使用
+	public void removePanelContainer(){
+
+//		System.out.println("the campaign is finshed");
+		setPlayingIndex(0);
+		setNumRows(0);
+		setNumCols(1);
+		panel.removeAll();
+		drawMap(3);
+	}
+
+
 
 }

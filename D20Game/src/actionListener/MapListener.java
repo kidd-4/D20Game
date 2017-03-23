@@ -26,8 +26,9 @@ import load.LoadItem;
  * Maplistener class implements actionlisener, 
  * when button on the map was clicked, then we call this class
  * @author grey
- * @version 1.0
+ * @version 2.0
  */
+
 public class MapListener implements ActionListener{
 	public Map map;
 	Cells[][] newMap;
