@@ -14,6 +14,7 @@ import play.Adaptor;
 
 import java.util.ArrayList;
 
+/*Testing adapter functionality*/
 public class TestAdaptor {
 
     Cells[][] testCells;
@@ -35,9 +36,9 @@ public class TestAdaptor {
                 1,1,1,1,1,1,1,1, Orientation.HOSTILE,
                 1,1,1,null,null);
         //create items
-        testItem1=new Items("Weapon",1);
-        testItem2=new Items("Ring",2);
-        testItem3=new Items("Helmet",3);
+        testItem1=new Items("Weapon",1,"");
+        testItem2=new Items("Ring",2,"");
+        testItem3=new Items("Helmet",3,"");
 
         //create the Cells[][]
         testCells=new Cells[5][5];

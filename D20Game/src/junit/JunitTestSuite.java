@@ -14,7 +14,20 @@ import org.junit.runners.Suite;
         TestLoadItem.class,
         TestMap.class,
         TestMapLoad.class,
-        TestPanelListener.class
+        TestPanelListener.class,
+        TestBullyBuilder.class,
+        TestNimbleBuilder.class,
+        TestTankBuilder.class,
+        TestFreezing.class,
+        TestFrightening.class,
+        TestPacifying.class,
+        TestAttackRoll.class,
+        TestCharacters.class,
+        TestAggressive.class,
+        TestFriendly.class,
+        TestFrightenedStrategy.class,
+        TestFrozenStrategy.class
+        
 })
 public class JunitTestSuite {
 }

@@ -9,14 +9,13 @@ import frame.Map;
  * New a Map object to initialize the frame
  * 
  * @author grey
- * @version 1.0
+ * @version 2.0
  *  
  */
 
 public class Launch {
 	public static void main(String[] args)  {
 		new Map("D20Game",1000,800);
-        
 	}
 
 }

@@ -7,9 +7,11 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -20,8 +22,16 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
+
+import save.SaveCampaign;
+import strategy.Aggressive;
+import strategy.ComputerPlayer;
+import strategy.Friendly;
 import actionListener.PanelListener;
+import actionListener.AttackListener;
 import actionListener.MapListener;
+import enumclass.Orientation;
 import enumclass.TileType;
 import load.LoadCampaign;
 import load.LoadCharacter;
@@ -35,6 +45,7 @@ import objects.Items;
 import objects.Matrix;
 import observer.CharacterObserver;
 import play.Adaptor;
+import play.RunningController;
 
 /**
  * 
@@ -42,10 +53,8 @@ import play.Adaptor;
  * When the map was changed, the map will be repainted.
  * When player create or edit a map, character, item or campaign, then show the information on the panel
  *
-
  * @author grey,Tann
- * @version 2.0
-
+ * @version 3.0
  */
 
 public class Map {
@@ -57,6 +66,7 @@ public class Map {
 	public ArrayList<Items> itemArrayList = new ArrayList<Items>();
 	public ArrayList<Characters> characterArrayList = new ArrayList<Characters>();
 	public ArrayList<Characters> characterMapArrayList = new ArrayList<>();
+	public ArrayList<Characters> characterTurn = new ArrayList<>();
 	
 	public ArrayList<Matrix> allMaps = new ArrayList<Matrix>();
 	public ArrayList<Campaigns> campaigns = new ArrayList<Campaigns>();
@@ -67,6 +77,7 @@ public class Map {
 	public JButton jButton;
 	public JButton startGame = new JButton("Start Game");
 	public JButton inventoryInformation = new JButton("Inventory Information");
+	public JButton automation = new JButton("Automation");
 	public JPanel panel = new JPanel();
 	public JPanel panelContainer = new JPanel(); // contain the panel which contains the map
 	public JPanel showPanel = new JPanel(); //contain the item and character combo box 
@@ -88,12 +99,16 @@ public class Map {
 	public JMenu jMenuHelp = new JMenu("Help");
 	public JMenu jMenuSave = new JMenu("Save");
 	public JMenuItem saveMap = new JMenuItem("Save Map");
+	public JMenuItem savePlaying = new JMenuItem("Save Playing");
+	public JMenuItem saveGame = new JMenuItem("Save Game");
 	public JMenu jMenuLoad = new JMenu("Load");
 	public JMenuItem loadMap = new JMenuItem("Load Map");
+	public JMenuItem loadPlaying = new JMenuItem("Load Playing");
+	public JMenuItem loadGame = new JMenuItem("Load Game");
 	public JMenuItem jMenuMap = new JMenuItem("Create a map");
 	public JMenuItem jMenuCharacter = new JMenuItem("Create/Edit a character");
 	public JMenuItem jMenuItem = new JMenuItem("Create/Edit an item");
-	public JMenuItem jMenuCampaign = new JMenuItem("Create/Edit a compaign");
+	public JMenuItem jMenuCampaign = new JMenuItem("Create/Edit a campaign");
 	public JMenuItem jMenuInstruction = new JMenuItem("Instruction");
 	
 	public JLabel name = new JLabel("Name");
@@ -141,7 +156,11 @@ public class Map {
 	public int playingIndex; //recoed the index of map the player is playing,start with 0
 	
 	public ActionListener actionListener;
-	public KeyListener keyListener ;
+	public PanelListener keyListener ;
+
+	public int isAuto; //0 means auto-playing; 1 means non-auto-playing
+
+
 
 	/**
 	 * The getter to get the playing index
@@ -201,10 +220,20 @@ public class Map {
 	}
 
 	/**
-	 * The setter to set the index of playing map in the campaign
+	 * 	 * The setter to set the index of playing map in the campaign
+	 * @param playingIndex    the index of map that is showed on the map
 	 */
+
 	public void setPlayingIndex(int playingIndex) {
 		this.playingIndex = playingIndex;
+	}
+
+	/**
+	 * Getter - isAuto
+	 * @return  whether it is auto-controlled or not
+	 */
+	public int getIsAuto() {
+		return isAuto;
 	}
 
 	/**
@@ -219,8 +248,6 @@ public class Map {
 		this.title = title;
 		init();
 	}
-
-	
 
 	/**
 	 * This method is used to draw the map in a panel according to different rows and columns.
@@ -237,43 +264,46 @@ public class Map {
 		
 		drawItemBox(); //show items in the file
 		drawcharacterBox();// show characters in the file
-//		drawInformation();
 		drawMapBox();
 		drawCampaignBox();
-		
+
 
 		if (k == 1) {
 			map = new Cells[numRows][numCols];
 			for (int rows = 0; rows < numRows; rows++)
 			for (int cols = 0; cols < numCols; cols++) {
 			map[rows][cols] = new Cells(TileType.GROUND,numRows,numCols,new Ground(TileType.GROUND));
-					
+
 			}
 		}
-		
-		
+
 		if(k==2)
 			panel.removeAll();
-//		if(k==3){
-//			panel.removeAll();
-//			panelContainer.removeAll();
-//			panelContainer.requestFocus();
-////			panel.updateUI();
-////			panelContainer.updateUI();
-//			System.out.println("333 "+playingIndex);
-//			System.out.println("333 "+numRows);
-//			System.out.println("333 "+numCols);
-//		}
+		
+		int weaponRange = 0;
+		int xHero = 0;
+		int yHero = 0;
+		if(keyListener!=null &&k==2){
+			 int[] position = getHeroLocation();
+			 xHero = position[0];
+			 yHero = position[1];
+//			 System.out.println("xHero "+xHero);
+//			 System.out.println("yHero "+yHero);
+//			 hero = map[xHero][yHero].getCharacters();
+			 weaponRange = map[xHero][yHero].getCharacters().getInventory().get(0).getRange();
+			 
+		}
+//		System.out.println("weaponRange: "+weaponRange);
+		
 
-
-		for (int i = 0; i < numRows; i++)
+		for (int i = 0; i < numRows; i++){
 			for (int j = 0; j < numCols; j++) {
 				// draw the map according to different kind of TileType
 				if (map[i][j].getTileType() == TileType.GROUND)
 					jButton = new JButton("", new ImageIcon("res/textures/Ground.png"));
-				else if (map[i][j].getTileType() == TileType.WALL) 
+				else if (map[i][j].getTileType() == TileType.WALL)
 					jButton = new JButton("", new ImageIcon("res/textures/Wall.png"));
-				 else if (map[i][j].getTileType() == TileType.CHEST)
+				else if (map[i][j].getTileType() == TileType.CHEST)
 					jButton = new JButton("", new ImageIcon("res/textures/Chest.png"));
 				else if (map[i][j].getTileType() == TileType.HERO)
 					jButton = new JButton("", new ImageIcon("res/textures/Hero.png"));
@@ -283,41 +313,85 @@ public class Map {
 					jButton = new JButton("", new ImageIcon("res/textures/Exit.jpg"));
 				else if (map[i][j].getTileType() == TileType.ENTRY)
 					jButton = new JButton("", new ImageIcon("res/textures/Entry.jpg"));
-				
+
 				jButton.putClientProperty("Rows", i);// set a attribute for every button
 				jButton.putClientProperty("Cols", j);
-				jButton.setBorderPainted(false);
+				jButton.setBorderPainted(true);
 				jButton.setBounds(j * 33, i * 33, 32, 32); // j represents width, i represent height
 				jButton.addActionListener(new MapListener(Map.this,itemBox,characterBox,characterArrayList,itemArrayList));
+			//	jButton.addMouseListener(new AttackListener(Map.this));
 
+				if(k==2){
+					jButton.addMouseListener(new AttackListener(Map.this,playingHero));
+				}
+
+				if(getOut(i, j, xHero, yHero,weaponRange) && k==2){
+					jButton.setBorder(new EtchedBorder(EtchedBorder.RAISED));
+					jButton.setContentAreaFilled(false);
+				}
+				
 				jButtons[i][j] = jButton;
 				panel.add(jButtons[i][j]);
-				
-				if(k==2)
-					panel.repaint(); 
+
 			}
+		}
+
+		if(k==2){
+			panel.repaint();
+		}
+//		if(k==2){
+//		Matrix matrix = new Matrix(map, campaigns.get(0).getCampaign().get(playingIndex).getName());
+//		campaigns.get(0).getCampaign().set(playingIndex, matrix);
+//		}
 	}
-	
+	/**
+	 * get hero's location
+	 * @return hero's y and x coordinate
+	 */
+	public int[] getHeroLocation(){
+
+		int[] position = new int[2];
+
+		 for(int i=0;i<numRows;i++)
+			 for(int j =0; j<numCols;j++){
+				 if(map[i][j].getTileType() == TileType.HERO){
+					position[0] = i;
+					position[1] = j;
+					 break;
+				 }
+			 }
+		return position;
+	}
+/**
+ * judge whether Jbutton is within the range of hero's weapon
+ * @param i  the x coordinate of Jbutton on map
+ * @param j	 the y coordinate of Jbutton on map
+ * @param xHero  the x coordinate of hero on map
+ * @param yHero	 the y coordinate of hero on map
+ * @param weaponRange  the range of weapon 
+ * @return  if the Jbutton is in the range of weapon of hero, return true, otherwise false
+ */
+	public boolean getOut(int i, int j, int xHero, int yHero, int weaponRange) {
+
+		if(i>=xHero-weaponRange&&i<=xHero+weaponRange&&j>=yHero-weaponRange&&j<=yHero+weaponRange)
+			return true;
+		else
+			return false;
+
+//		if(xHero+x<0||xHero+x>numRows||yHero+y<0||yHero+y>numCols)
+//			return false;
+//		else 
+//			return true;
+	}
+
 	/**
 	 * show the information of selected character
 	 */
 	public void drawInformation(){
 		Characters characters = null;
-		//读取characters
-		/* when the character box in the main frame was selected, 
-		 * then we get corresponding character object from the file
-		 */
-//		try {
-//			if(characterMapBox.getSelectedItem() !=null)
-//			characters = new LoadCharacter().loadcharacter(characterMapBox.getSelectedItem().toString(),characterArrayList);
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
+	
 		
 		characters = getCharacterMap();
-		
-		
 		
 
 		if(characters!=null){
@@ -438,8 +512,31 @@ public class Map {
 		jFrame.setBounds(0, 0, width, height);
 
 		 drawMap(1); //initialize map the first
-		 
-		
+
+		automation.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				isAuto=1-isAuto;
+				if(isAuto==1){
+					for(Characters characters:characterTurn){
+						if(characters.getStrategy() instanceof PanelListener){
+							characters.setStrategy(new ComputerPlayer(Map.this,numberMap));
+							break;
+						}
+					}
+					automation.setText("cancel auto");
+				}
+				else if(isAuto==0){
+					for(Characters characters:characterTurn){
+						if(characters.getStrategy()instanceof ComputerPlayer){
+							characters.setStrategy(keyListener);
+							break;
+						}
+					}
+					automation.setText("automation");
+				}
+			}
+		});
 		 
 		 startGame.addActionListener(new ActionListener() {
 			
@@ -462,9 +559,8 @@ public class Map {
 				}
 
 				initCampaign();
-				System.out.println("playingIndex "+playingIndex);
-				System.out.println("numberMap "+numberMap);
-
+				LoggingWindow loggingWindow =LoggingWindow.getLoggingWindow();
+				loggingWindow.setVisible(true);
 			}
 		});
 		 
@@ -479,7 +575,7 @@ public class Map {
 			}
 		};
 		
-			characterMapBox.addActionListener(actionListener);;
+			characterMapBox.addActionListener(actionListener);
 			
 		 
 		 //显示下拉框选中的人物的信息
@@ -502,15 +598,9 @@ public class Map {
 				
 				character = getCharacterMap();
 				
-//				try {
-//					character = new LoadCharacter().loadcharacter(characterMapBox.getSelectedItem().toString(), characterArrayList);
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//				}
 				
-				new InventoryFrame(Map.this, jFrame,characterMapArrayList,character);
-				characterMapArrayList.clear();;
+				new InventoryFrame(Map.this,jFrame,characterMapArrayList,character);
+				characterMapArrayList.clear();
 				jFrame.setEnabled(false);
 				panelContainer.requestFocus();
 			}
@@ -564,6 +654,42 @@ public class Map {
 			}
 		});
 		
+		savePlaying.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Campaigns newCampaign = new Campaigns(playingCampaign.getCampaign(), playingCampaign.getName(), playingIndex);
+				new SaveCampaignFrame(Map.this,jFrame,newCampaign,campaigns,playingIndex); //open SaveCampaignFrame
+				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
+				System.out.println("save playing ");
+			}
+		});
+
+		saveGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+				RunningController.obtainRunningController().stopRun();
+				removeCharacterDependency();
+				removeCharacterStrategy();
+				String matrixName=Map.this.playingCampaign.getCampaign().get(Map.this.playingIndex).getName();
+				Matrix recordMatrix=new Matrix(Map.this.getMap(),matrixName);
+				ArrayList<Matrix>recordMatrixList=new ArrayList<Matrix>();
+				recordMatrixList.add(recordMatrix);
+				for(int i=Map.this.playingIndex+1; i<Map.this.playingCampaign.getCampaign().size();i++){
+					recordMatrixList.add(Map.this.playingCampaign.getCampaign().get(i));
+				}
+				Campaigns recordCamp=new Campaigns(recordMatrixList,"playingGame",0);
+				try {
+					new SaveCampaign().saveplayingGame(recordCamp);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				System.out.println("Save successfully!");
+			}
+		});
+		
 		//open the SaveMapFrame
 		saveMap.addActionListener(new ActionListener() {
 			@Override
@@ -596,6 +722,67 @@ public class Map {
 			}
 
 		});
+
+		
+		loadPlaying.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				new LoadCampaignFrame(Map.this,jFrame,campaigns); //open LoadCampaignFrame
+				jFrame.setEnabled(false);
+				panelContainer.requestFocus();
+			}
+		});
+
+		loadGame.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//TODO:111
+				Campaigns recordGame=null;
+				try {
+					recordGame = new LoadCampaign().readGameRecord();
+				} catch (ClassNotFoundException | IOException e1) {
+					e1.printStackTrace();
+				}
+				//initialization
+				playingHero=null;
+				playingCampaign=null;
+				playingIndex=0;
+				//set playingCampaign info
+				Map.this.playingCampaign=recordGame;
+				Cells[][] firstMap=Map.this.playingCampaign.getCampaign().get(0).getMap();
+				numRows = firstMap[0][0].getX();
+				numCols = firstMap[0][0].getY();
+				//to get playingHero info
+				for(int row=0; row<numRows; row++){
+					for(int col=0; col<numCols; col++){
+						if(firstMap[row][col].getTileType()==TileType.HERO){
+							Map.this.playingHero=firstMap[row][col].getCharacters();
+							break;
+						}
+					}
+				}
+				setMap(firstMap, numRows, numCols);
+				updateCharacterList();
+				numberMap = playingCampaign.getCampaign().size()-1;
+				keyListener = new PanelListener(Map.this,numberMap);
+				panelContainer.addKeyListener(keyListener);
+				panelContainer.requestFocus();
+				characterTurn.clear();
+				characterTurnMove();
+				initialCharactersStrategy();
+				initialCharactersDependency();
+
+				RunningController runningController =RunningController.obtainRunningController();
+				runningController.enrollTurnsCharaters(characterTurn);
+				runningController.startRun();
+				drawMap(2);
+				LoggingWindow loggingWindow =LoggingWindow.getLoggingWindow();
+				loggingWindow.setVisible(true);
+
+			}
+		});
 		
 		//open the LoadMapFrame
 		loadMap.addActionListener(new ActionListener() {
@@ -615,7 +802,11 @@ public class Map {
 		jMenu.add(jMenuCharacter);
 		jMenu.add(jMenuItem);
 		jMenuSave.add(saveMap);
+		jMenuSave.add(savePlaying);
+		jMenuSave.add(saveGame);
 		jMenuLoad.add(loadMap);
+		jMenuLoad.add(loadPlaying);
+		jMenuLoad.add(loadGame);
 		jMenuBar.add(jMenu);
 		jMenuBar.add(jMenuSave);
 		jMenuBar.add(jMenuLoad);
@@ -624,7 +815,6 @@ public class Map {
 
 		panel.setBackground(Color.GRAY);
 		panelContainer.setBackground(Color.GRAY);
-//		panelShow.setBackground(Color.GREEN);
 		showPanel.setBackground(Color.white);
 		characterPanel.setBackground(Color.white);
 		
@@ -642,6 +832,7 @@ public class Map {
 		showPanel.add(characterMapLabel);
 		showPanel.add(characterMapBox);
 		showPanel.add(inventoryInformation);
+		showPanel.add(automation);
 		characterPanel.setLayout(new FlowLayout(0, 30, 30));//0向左对齐，30代表左右间距，30代表上下间距
 		characterPanel.add(name);
 		characterPanel.add(namevValue);
@@ -678,7 +869,7 @@ public class Map {
 		characterPanel.add(inventory5);
 		characterPanel.add(inventory6);
 		characterPanel.add(inventory7);
-		
+
 		
 
 		jFrame.add(panel);
@@ -692,7 +883,10 @@ public class Map {
 		jFrame.setLocationRelativeTo(null);// put the screen in the center
 		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
-	
+	/**
+	 * get all the characters on the map 
+	 * @return  the selected character
+	 */
 	public Characters getCharacterMap() {
 		Characters characters = null;
 		for(int i=0;i<numRows;i++)
@@ -713,7 +907,7 @@ public class Map {
 	
 	
 	/**
-	 *  * The method is used to verify the map
+	 * The method is used to verify the map
 	 * in the creation of maps, an entry,exit,hero should be existed
 	 * @param flagEntry  number of entry
 	 * @param flagExit	number of exit
@@ -786,7 +980,6 @@ public class Map {
 
 		//set
 		Cells[][] newMap = playingCampaign.getCampaign().get(playingIndex).getMap();
-//		System.out.println("enter to map :"+playingCampaign.getCampaign().get(playingIndex).getName());
 		
 		numRows = newMap[0][0].getX();
 		numCols = newMap[0][0].getY();
@@ -804,8 +997,16 @@ public class Map {
 		panelContainer.requestFocus();
 		//character show on the entry
 		showOnMap();
+		//config the playing turn
+		characterTurn.clear();
+		characterTurnMove();
+		initialCharactersStrategy();
+		initialCharactersDependency();
+		//keyListener.configTurns(characterTurn);
+		RunningController runningController =RunningController.obtainRunningController();
+		runningController.enrollTurnsCharaters(characterTurn);
+		runningController.startRun();
 		drawMap(2);
-
 	}
 
 	/**
@@ -836,17 +1037,27 @@ public class Map {
 	public void changeMap(){
 		this.playingIndex+=1;
 		Cells[][] newMap = playingCampaign.getCampaign().get(playingIndex).getMap();
-		System.out.println("change to"+playingCampaign.getCampaign().get(playingIndex).getName()+"map");
+		System.out.println("[ change map ] change to "+playingCampaign.getCampaign().get(playingIndex).getName());
 		numRows = newMap[0][0].getX();
 		numCols = newMap[0][0].getY();
 		setMap(newMap, numRows, numCols);
-		System.out.println("playingIndex- "+playingIndex);
-		System.out.println(""+numRows);
-		System.out.println(""+numCols);
+		System.out.println("[ change map ]playingIndex - "+playingIndex);
+		System.out.println("[ new map info ]rows of map "+numRows);
+		System.out.println("[ new map info ]columns of map "+numCols);
 		//adapt the items and character, based on hero's level
 		Adaptor adaptor=new Adaptor(newMap,this.playingHero);
 		adaptor.adapting();
 		updateCharacterList();
+		//update the turning characters list
+		characterTurn.clear();
+		characterTurnMove();//每次遍历地图时就已经消除了死亡的人物，每张地图只能调用一次，顺序就已经确定了
+		initialCharactersStrategy();
+		initialCharactersDependency();
+		//keyListener.configTurns(characterTurn);
+		RunningController runningController =RunningController.obtainRunningController();
+		runningController.enrollTurnsCharaters(characterTurn);
+		runningController.startRun();
+
 		drawMap(2);
 	}
 
@@ -857,7 +1068,7 @@ public class Map {
 
 		characterMapBox.removeActionListener(actionListener);
 		//在消除所有的选项之前，需要先去除监听，因为选项为空时，监听会有问题
-		//before deleting all items in jcombobox,need to delete the listener firstly
+		//before deleting all items in jcombobox,need to delete the listener first
 		characterMapBox.removeAllItems();
 		
 		
@@ -866,10 +1077,9 @@ public class Map {
 			for(int j=0;j<numCols;j++){
 				if(map[i][j].getTileType() == TileType.MONSTER ||map[i][j].getTileType() == TileType.HERO){
 					characterMapBox.addItem(map[i][j].getCharacters().getName());
-//					System.out.println("character Jcombobox update");
 				}
 			}
-		
+
 		characterMapBox.addActionListener(actionListener);
 	}
 
@@ -879,14 +1089,99 @@ public class Map {
 	//没有使用
 	public void removePanelContainer(){
 
-//		System.out.println("the campaign is finshed");
 		setPlayingIndex(0);
 		setNumRows(0);
 		setNumCols(1);
 		panel.removeAll();
 		drawMap(3);
 	}
+	
+	//安排地图中人物的移动顺序
+	/**
+	 * sort moving sequence of characters in the map
+	 */
+	public void characterTurnMove(){
 
+		HashMap<Integer, Characters> hashMap = new HashMap<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		int random;
+		int total;
+		for(int i=0;i<numRows;i++)
+			for(int j=0;j<numCols;j++){
+				if(map[i][j].getTileType() == TileType.MONSTER ||map[i][j].getTileType() == TileType.HERO){
 
+					random = getD20();
+					total = map[i][j].getCharacters().getModDex()+random;
+					// prevent the same total number
+					while(true){
+						if(arrayList.contains(total)){
+							random = getD20();
+							total = map[i][j].getCharacters().getModDex()+random;
+						}
+						else{
+							arrayList.add(total);
+							break;
+						}
+					}
+					
+					hashMap.put(total, map[i][j].getCharacters());
+				}
+			}
+		//sort the total
+		Collections.sort(arrayList);
+		// from high to low 
+		for(int i=arrayList.size()-1;i>=0;i--){
+			characterTurn.add(hashMap.get(arrayList.get(i)));
+		}
+		
+		
+	}
+	
+	/**
+	 * get random number 1-20
+	 * @return d20
+	 */
+	public int getD20(){
+		return new Random().nextInt(20)+1;
+	}
+	/**
+	 * initial characters's strategy on the map
+	 */
+	public void initialCharactersStrategy(){
+		for(Characters character:characterTurn){
+			if(character.getOrient()== Orientation.HOSTILE){
+				character.setStrategy(new Aggressive(Map.this,character));
+			}
+			else if(character.getOrient()==Orientation.FRIENDLY)
+				character.setStrategy(new Friendly(Map.this,character));
+			else if (character.getOrient() == Orientation.PLAYER)
+				//keyListener is also the strategy of the user player
+				character.setStrategy(keyListener);
+		}
+	}
+	/**
+	 * set dependency for character
+	 */
+	public void initialCharactersDependency(){
+		for(Characters character:characterTurn){
+			character.setDependentMap(Map.this);
+		}
+	}
+
+	/**
+	 * the method is to remove the character's dependent map
+	 */
+	public void removeCharacterDependency(){
+		for(Characters character : characterTurn)
+			character.dependentMap=null;
+	}
+
+	/**
+	 * the method is to remove the strategy for everyone
+	 */
+	public void removeCharacterStrategy(){
+		for(Characters character:characterTurn)
+			character.strategy=null;
+	}
 
 }

@@ -10,18 +10,24 @@ import java.util.ArrayList;
 
 public class Director {
 	/**
-	 * The Director is to use a specific "build plan": the FighterBuilder
+	 * The Director is to use a specific "build plan": the FighterBuilder.
 	 */
 	private FighterBulider fighterBulider;
-	
+	/**
+	 * This method is setter method for builder
+	 * @param newFighterBuilder is of type FighterBuilder used for setter
+	 */
 	public void setBuilder(FighterBulider newFighterBuilder){
 		this.fighterBulider = newFighterBuilder;
 	}
+	
 	/**
 	 * The Director assumes that all Scores have the same parts
 	 * and each part is built by calling the same method
 	 * though what these specific methods do may be different
+	 * @param arrayList    which contains 6 attributes of character
 	 */
+	
 	public void constructScores(ArrayList<Integer> arrayList){
 		fighterBulider.createNewScores();
 		fighterBulider.sort(arrayList);

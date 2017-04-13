@@ -4,20 +4,21 @@ import enumclass.TileType;
 import objects.Cells;
 import objects.Characters;
 import objects.Items;
-import objects.Matrix;
 import java.util.ArrayList;
 
 /**
  * The class is used to adapt the NPC and items on the map, based on the level of the player
  * @author Tann chen
  */
-public class Adaptor {
+public class Adaptor  {
 
     private Characters basedPlayer;
     private Cells[][] adaptTarget;
 
     /**
      * constructor
+     * @param targetedMatrix  the specific map
+     * @param player the hero object
      */
     public Adaptor(Cells[][] targetedMatrix,Characters player){
         this.adaptTarget=targetedMatrix;
@@ -41,6 +42,7 @@ public class Adaptor {
         for(int r=0; r<rowNum;r++){
             for(int c=0;c<columnNum;c++){
                 if(targetMap[c][r].getTileType()== TileType.MONSTER){
+                	System.out.println(targetMap[c][r].getCharacters().getName());
                     targetMap[c][r].getCharacters().setLevel(basedPlayer.getLevel());
                 }
             }
@@ -75,6 +77,7 @@ public class Adaptor {
 
     /**
      * The method is used to adapt the items on the map, based on the level of player
+     * @param targetItems the item you loot
      */
     private void adaptItems(Items targetItems){
 

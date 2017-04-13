@@ -6,10 +6,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-
 import objects.Cells;
 import objects.Characters;
 import objects.Entry;
@@ -26,7 +24,7 @@ import load.LoadItem;
  * Maplistener class implements actionlisener, 
  * when button on the map was clicked, then we call this class
  * @author grey
- * @version 2.0
+ * @version 3.0
  */
 
 public class MapListener implements ActionListener{
@@ -42,6 +40,7 @@ public class MapListener implements ActionListener{
 	ArrayList<Items> itemArrayList;
 	
 	int x,y,numRows,numCols;
+
 	/**
 	 * map listener constructor method
 	 * @param map 	the map object from the main frame
@@ -57,7 +56,11 @@ public class MapListener implements ActionListener{
 		this.characterArrayList = characterArrayList;
 		this.itemArrayList = itemArrayList;
 	}
-	
+
+	/**
+	 * override method to implement action event
+	 * @param e actionEvent
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JButton jButton = (JButton) e.getSource();
@@ -75,7 +78,7 @@ public class MapListener implements ActionListener{
 			 */
 			characters = new LoadCharacter().loadcharacter(characterBox.getSelectedItem().toString(),characterArrayList);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
@@ -163,7 +166,6 @@ public class MapListener implements ActionListener{
 			}
 			}
 			});
-	
 	}
 
 	

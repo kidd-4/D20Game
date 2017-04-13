@@ -14,7 +14,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
 import load.LoadCampaign;
 import load.LoadMap;
 import objects.Campaigns;
@@ -35,10 +34,10 @@ public class CampaignFrame {
 	JComboBox<String> jComboBox = new JComboBox<String>();
 	/**
 	 * constructor method, when the CampaignFrame is called,  it will invoke 
-	 * @param map
-	 * @param jFrame2
-	 * @param allMaps
-	 * @param campaignArraylist
+	 * @param map  map class object
+	 * @param jFrame2  main map frame
+	 * @param allMaps  arraylist of all maps
+	 * @param campaignArraylist  arraylist of all campaigns
 	 */
 	public CampaignFrame(Map map, JFrame jFrame2,ArrayList<Matrix> allMaps, ArrayList<Campaigns> campaignArraylist){
 		JFrame jFrame = new JFrame("Items");
@@ -68,7 +67,6 @@ public class CampaignFrame {
 //	    try {
 //	    	showMaps =	new LoadMap().readMap();
 //		} catch (ClassNotFoundException | IOException e2) {
-//			// TODO Auto-generated catch block
 //			e2.printStackTrace();
 //		}
 	    
@@ -140,7 +138,7 @@ public class CampaignFrame {
 			public void actionPerformed(ActionEvent e) {
 				
 				boolean flag = save(campaignArraylist);
-				System.err.println(flag);
+				System.out.println(flag);
 				
 				//在主界面显示campaigns  drawCampaigns();
 				// display the campaigns in the main frame
@@ -163,11 +161,12 @@ public class CampaignFrame {
 		//if oldCampaign exit,delete original campaign and add new campaign. if not, just add new campaign
 		if(editCampaigns == null)//create
 		{
-			editCampaigns = new Campaigns(campaign, campaignName.getText());
+			editCampaigns = new Campaigns(campaign, campaignName.getText(),0);
 			campaignArraylist.add(editCampaigns);
 		}
 		else{//edit
 			int index = campaignArraylist.indexOf(editCampaigns);
+//			System.out.println("index: "+ index);
 			campaignArraylist.set(index,editCampaigns);
 			flag = true;
 		}
@@ -175,7 +174,6 @@ public class CampaignFrame {
 		try {
 			new SaveCampaign().saveCampaign(campaignArraylist);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		return flag;
@@ -193,7 +191,6 @@ public class CampaignFrame {
 		try {
 			matrix = new LoadMap().loadMap2(allMaps, jComboBox.getSelectedItem().toString());
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		//如果输入的campaign名字已存在(edit)，则添加map。否则新建campaign(create)，加入map

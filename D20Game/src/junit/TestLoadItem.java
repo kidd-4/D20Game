@@ -7,7 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import load.LoadItem;
 import objects.Items;
-
+/* test load item functionality*/
 public class TestLoadItem {
 	
 	LoadItem loadItem = new LoadItem();
@@ -18,8 +18,8 @@ public class TestLoadItem {
 	public static void setUpBeforeClass() throws Exception {
 		
 		
-		Items items = new Items("WEAPON1", 1);
-		Items items2 = new Items("SHIELD1", 2);
+		Items items = new Items("WEAPON1", 1,"");
+		Items items2 = new Items("SHIELD1", 2,"");
 		itemArrayList.add(items);
 		itemArrayList.add(items2);
 		name = "WEAPON1";
